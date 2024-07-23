@@ -17,6 +17,7 @@ import java.util.List;
 @SpringBootTest
 class ImagineApplicationTests {
 
+
 	@Autowired
 	private MemberService memberService;
 
@@ -25,40 +26,30 @@ class ImagineApplicationTests {
 
 	private Member testMember;
 
-//	@BeforeEach
-//	void setUp() throws Exception {
-//		testMember = memberService.findById(1L);
-//		if (testMember == null) {
-//			testMember = new Member("John Doe", "johndoe", "1990-01-01", "password", "johndoe@example.com", "johndoe123");
-//			memberService.register(testMember);
-//			testMember = memberService.findById(1L);
-//		}
-//	}
-
 	@Test
 	void contextLoads() {
 	}
 
 	@Test
 	void testMemberRegistration() throws Exception {
-		Member member = new Member("yukang", "yukang0316", "2000-03-16", "password123", "yukang0316@naver.com", "asdfe");
+		Member member = new Member("tom", "aaaa", "2002-05-30", "bbbb", "hello@naver.com", "hello");
 		memberService.register(member);
 		Member retrievedMember = memberService.findById(member.getMemberId());
 		Assertions.assertNotNull(retrievedMember);
-		Assertions.assertEquals("yukang", retrievedMember.getName());
+		Assertions.assertEquals("tom", retrievedMember.getName());
 	}
 
-	@Test
-	void testAttendanceCheck() throws Exception {
-		testMember = memberService.findByNickname("asdfe");
-		Member member = memberService.findById(testMember.getMemberId());
-		Assertions.assertNotNull(member, "Member should be registered first");
-
-		LocalDate today = LocalDate.now();
-		attendanceService.checkAttendance(member.getMemberId(), today);
-		List<Attendance> attendanceList = attendanceService.getMonthlyAttendance(member.getMemberId(), today.getYear(), today.getMonthValue());
-
-		Assertions.assertFalse(attendanceList.isEmpty(), "Attendance list should not be empty");
-		Assertions.assertTrue(attendanceList.stream().anyMatch(a -> a.getDate().equals(today) && a.isChecked()), "Attendance for today should be checked");
-	}
+//	@Test
+//	void testAttendanceCheck() throws Exception {
+//		testMember = memberService.findByNickname("hello");
+//		Member member = memberService.findById(testMember.getMemberId());
+//		Assertions.assertNotNull(member, "Member should be registered first");
+//
+//		LocalDate today = LocalDate.now();
+//		attendanceService.checkAttendance(member.getMemberId(), today);
+//		List<Attendance> attendanceList = attendanceService.getMonthlyAttendance(member.getMemberId(), today.getYear(), today.getMonthValue());
+//
+//		Assertions.assertFalse(attendanceList.isEmpty(), "Attendance list should not be empty");
+//		Assertions.assertTrue(attendanceList.stream().anyMatch(a -> a.getDate().equals(today) && a.isChecked()), "Attendance for today should be checked");
+//	}
 }

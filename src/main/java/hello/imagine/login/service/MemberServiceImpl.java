@@ -22,13 +22,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void register(Member member) throws CustomDuplicateException {
         if (memberRepository.findById(member.getId()).isPresent()) {
-            throw new CustomDuplicateException("아이디가 이미 존재합니다.");
+            throw new CustomDuplicateException("id is already exist");
         }
         if (memberRepository.findByEmail(member.getEmail()).isPresent()) {
-            throw new CustomDuplicateException("이메일이 이미 존재합니다.");
+            throw new CustomDuplicateException("email is already exist");
         }
         if (memberRepository.findByNickname(member.getNickname()).isPresent()) {
-            throw new CustomDuplicateException("닉네임이 이미 존재합니다.");
+            throw new CustomDuplicateException("nickname is already exist");
         }
         memberRepository.save(member);
     }

@@ -1,8 +1,8 @@
 package hello.imagine.login.model;
 
 import hello.imagine.attendance.model.Attendance;
+import hello.imagine.community.model.ChatMessage;
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -25,6 +25,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Attendance> attendances;
 
+    @OneToMany(mappedBy = "sender")
+    private List<ChatMessage> sentMessages;
+
     public Member() {}
 
     public Member(String name, String id, String birthDate, String pw, String email, String nickname) {
@@ -37,7 +40,6 @@ public class Member {
     }
 
     // getters and setters
-
 
     public Long getMemberId() {
         return memberId;
@@ -109,5 +111,13 @@ public class Member {
 
     public void setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
+    }
+
+    public List<ChatMessage> getSentMessages() {
+        return sentMessages;
+    }
+
+    public void setSentMessages(List<ChatMessage> sentMessages) {
+        this.sentMessages = sentMessages;
     }
 }
