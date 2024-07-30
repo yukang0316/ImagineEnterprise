@@ -14,7 +14,7 @@ public class Attendance {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-
+    ;
     private LocalDate date;
     private boolean checked;
 

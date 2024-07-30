@@ -1,5 +1,7 @@
 package hello.imagine;
 
+import hello.imagine.Group.Repository.CategoryRepository;
+import hello.imagine.Group.Repository.GroupRepository;
 import hello.imagine.login.model.Member;
 import hello.imagine.login.service.MemberService;
 import hello.imagine.attendance.model.Attendance;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -34,6 +37,12 @@ class ImagineApplicationTests {
 //			testMember = memberService.findById(1L);
 //		}
 //	}
+
+	@Autowired
+	private GroupRepository groupRepository;
+
+	@MockBean
+	private CategoryRepository categoryRepository;
 
 	@Test
 	void contextLoads() {
@@ -61,4 +70,7 @@ class ImagineApplicationTests {
 		Assertions.assertFalse(attendanceList.isEmpty(), "Attendance list should not be empty");
 		Assertions.assertTrue(attendanceList.stream().anyMatch(a -> a.getDate().equals(today) && a.isChecked()), "Attendance for today should be checked");
 	}
+
+
+
 }
