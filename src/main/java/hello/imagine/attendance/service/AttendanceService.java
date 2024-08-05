@@ -1,12 +1,7 @@
-package hello.imagine.attendance.service;
+package hello.imagine.attendance.Service;
 
-import hello.imagine.attendance.model.Attendance;
+public interface AttendService {
+    public boolean CheckIn(String Id);
+    public int getPoint(String Id);
 
-import java.time.LocalDate;
-import java.util.List;
-
-// AttendanceService.java
-public interface AttendanceService {
-    void checkAttendance(Long memberId, LocalDate date) throws Exception;
-    List<Attendance> getMonthlyAttendance(Long memberId, int year, int month) throws Exception;
 }

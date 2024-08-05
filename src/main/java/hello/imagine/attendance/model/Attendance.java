@@ -1,62 +1,53 @@
-package hello.imagine.attendance.model;
+package hello.imagine.attendance.Entity;
 
-import hello.imagine.login.model.Member;
-import jakarta.persistence.*;
-import java.time.LocalDate;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+import java.util.Date;
 
 @Entity
 public class Attendance {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-    ;
-    private LocalDate date;
-    private boolean checked;
+    private String Id; // 사용자의 아이디 저장
+    private int Point; // 포인트 저장
+    private Date Date;
 
     public Attendance() {}
 
-    public Attendance(Member member, LocalDate date, boolean checked) {
-        this.member = member;
-        this.date = date;
-        this.checked = checked;
+    public Attendance(String Id, int Point, Date Date) {
+        this.Id = Id;
+        this.Point = Point;
+        this.Date = Date;
     }
 
-    // getters and setters
+    //getter setter
 
-    public Long getId() {
-        return id;
+    public String getId() {
+        return Id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String id) {
+        Id = id;
     }
 
-    public Member getMember() {
-        return member;
+    public Date getDate() {
+        return Date;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setDate(Date Date) {
+        this.Date = Date;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public int getPoint() {
+        return Point;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setPoint(int point) {
+        Point = point;
     }
 
-    public boolean isChecked() {
-        return checked;
-    }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
+
 }
