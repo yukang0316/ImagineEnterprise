@@ -35,7 +35,7 @@ public class MeetingController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // 제목으로 모임 검새
+    // 제목으로 모임 검색
     @GetMapping("/search")
     public ResponseEntity<List<Meeting>> searchMeetingsByTitle(@RequestParam String title) {
         return ResponseEntity.ok(meetingService.searchMeetingByTitle(title));
