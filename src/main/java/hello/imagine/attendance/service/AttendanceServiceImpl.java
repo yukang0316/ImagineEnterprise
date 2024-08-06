@@ -1,68 +1,54 @@
-package hello.imagine.attendance.Service;
+package hello.imagine.attendance.service;
 
 import hello.imagine.attendance.model.Attendance;
-import hello.imagine.attendance.Repository.AttendanceDbRepository;
+import hello.imagine.attendance.repository.AttendanceRepository;
+import hello.imagine.login.model.Member;
+import hello.imagine.login.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 
 @Service
-public class AttendServiceImpl implements AttendService {
-
-
-    private final AttendanceDbRepository attendanceDbRepository;
+public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
-    public AttendServiceImpl(AttendanceDbRepository attendanceDbRepository) {
-        this.attendanceDbRepository = attendanceDbRepository;
-    }
+    private AttendanceRepository attendanceRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Override
-    public boolean CheckIn(String Id) {
-        Optional<Attendance> optionalAttendance = attendanceDbRepository.findById(Id);
-        Date now = new Date();
-
-        if (optionalAttendance.isPresent()) {
-            Attendance attendance = optionalAttendance.get();
-            Date Date = attendance.getDate();
-
-            if (!isSameDay(Date, now)) {
-                attendance.setPoint(attendance.getPoint() + 20);
-                attendance.setDate(now);
-                attendanceDbRepository.save(attendance);
-                return true;
-
-            } else {
-                return false;
-            }
-
-
-        } else {
-            Attendance attendance = new Attendance(Id,20, new Date());
-            attendanceDbRepository.save(attendance);
-            return true;
+    public void checkAttendance(Long memberId, LocalDate date) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("Member not found"));
+        if (attendanceRepository.existsByMemberAndDate(member, date)) {
+            throw new Exception("Attendance already checked for today");
         }
 
+        // attendance 포인트 업데이트
+        Attendance attendance = new Attendance();
+        attendance.setMember(member);
+        attendance.setDate(date);
+        attendance.setPoints(20);
+        attendanceRepository.save(attendance);
+
+
+        // Member 포인트 업데이트
+        member.setPoints(member.getPoints() + 20);
+        memberRepository.save(member);
     }
 
     @Override
-    public int getPoint(String Id) {
-        Optional<Attendance> optionalAttendance = attendanceDbRepository.findById(Id);
-        return optionalAttendance.map(Attendance::getPoint).orElse(0);
+    public List<Attendance> getMonthlyAttendance(Long memberId, int year, int month) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("Member not found"));
+        return attendanceRepository.findByMemberAndDateBetween(
+                member,
+                LocalDate.of(year, month, 1),
+                LocalDate.of(year, month, YearMonth.of(year, month).lengthOfMonth())
+        );
     }
-
-    private boolean isSameDay(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.setTime(date1);
-        cal2.setTime(date2);
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-    }
-
 }
 
 
