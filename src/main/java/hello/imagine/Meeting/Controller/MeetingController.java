@@ -1,7 +1,7 @@
-package hello.imagine.Group.Controller;
+package hello.imagine.Meeting.Controller;
 
-import hello.imagine.Group.Entity.Meeting;
-import hello.imagine.Group.Service.MeetingService;
+import hello.imagine.Meeting.model.Meeting;
+import hello.imagine.Meeting.Service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/meetings")
+@RequestMapping("/meetings")
 public class MeetingController {
 
     @Autowired
@@ -39,5 +39,12 @@ public class MeetingController {
     @GetMapping("/search")
     public ResponseEntity<List<Meeting>> searchMeetingsByTitle(@RequestParam String title) {
         return ResponseEntity.ok(meetingService.searchMeetingByTitle(title));
+    }
+
+    // 주변 모임 추천
+    @GetMapping("/recommend")
+    public ResponseEntity<List<Meeting>> recommendNearbyMeetings(@RequestParam double latitude, @RequestParam double longitude) {
+        double distance = 5.0; // 5km 이내의 모임 검색
+        return ResponseEntity.ok(meetingService.findNearbyMeetings(latitude, longitude, distance));
     }
 }
