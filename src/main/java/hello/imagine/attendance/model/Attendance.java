@@ -17,13 +17,15 @@ public class Attendance {
     
     private LocalDate date;
     private boolean checked;
-
+    private int points;
+    
     public Attendance() {}
 
-    public Attendance(Member member, LocalDate date, boolean checked) {
+    public Attendance(Member member, LocalDate date, boolean checked, int points) {
         this.member = member;
         this.date = date;
         this.checked = checked;
+        this.points = points;
     }
 
     // getters and setters
@@ -59,4 +61,12 @@ public class Attendance {
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
+        public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+    
 }
