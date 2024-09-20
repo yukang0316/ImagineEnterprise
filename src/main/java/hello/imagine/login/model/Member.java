@@ -1,7 +1,9 @@
 package hello.imagine.login.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.imagine.attendance.model.Attendance;
 import hello.imagine.community.model.ChatMessage;
+import hello.imagine.myPage.entity.Mypage;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -23,9 +25,15 @@ public class Member {
     private int points;
 
     @OneToMany(mappedBy = "member")
+    @JsonIgnore
     private List<Attendance> attendances;
 
+    @OneToMany(mappedBy = "member")
+    @JsonIgnore
+    private List<Mypage> mypages;
+
     @OneToMany(mappedBy = "sender")
+    @JsonIgnore
     private List<ChatMessage> sentMessages;
 
     public Member() {}

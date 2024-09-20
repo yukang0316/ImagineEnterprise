@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cooking Category</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .header {
+            margin: 20px 0;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .post {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .chat-room {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        #loginMessage {
+            color: red;
+        }
+    </style>
+    <script>
+        async function loadPosts() {
+            const response = await fetch("http://localhost:8080/posts/category/1"); // Replace '1' with your cooking category ID
+            const posts = await response.json();
+            const postContainer = document.getElementById("postContainer");
+
+            postContainer.innerHTML = ""; // Clear existing posts
+
+            posts.forEach(post => {
+                const postElement = document.createElement("div");
+                postElement.className = "post";
+                postElement.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p>`;
+                postContainer.appendChild(postElement);
+            });
+        }
+
+        async function loadChatRooms() {
+            const response = await fetch("http://localhost:8080/chat/rooms/category/1"); // Replace '1' with your cooking category ID
+            const chatRooms = await response.json();
+            const chatRoomContainer = document.getElementById("chatRoomContainer");
+
+            chatRoomContainer.innerHTML = ""; // Clear existing chat rooms
+
+            chatRooms.forEach(chatRoom => {
+                const chatRoomElement = document.createElement("div");
+                chatRoomElement.className = "chat-room";
+                chatRoomElement.innerHTML = `<h3>${chatRoom.name}</h3><p>${chatRoom.description}</p><p>Participants: ${chatRoom.participants.length}</p>`;
+                chatRoomElement.onclick = () => {
+                    window.location.href = `openChatting.html?roomId=${chatRoom.id}`;
+                };
+                chatRoomContainer.appendChild(chatRoomElement);
+            });
+        }
+
+        async function createPost() {
+            const title = document.getElementById("title").value;
+            const content = document.getElementById("content").value;
+
+            const postDTO = {
+                title: title,
+                content: content,
+                categoryId: 1 // 카테고리 ID 설정 (예제)
+            };
+
+            const response = await fetch("http://localhost:8080/posts/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(postDTO),
+                credentials: 'same-origin' // 세션 쿠키를 사용하기 위해 필요합니다.
+            });
+
+            if (response.ok) {
+                alert("Post created successfully!");
+                loadPosts();
+            } else {
+                alert("Failed to create post.");
+            }
+        }
+
+        function checkLogin() {
+            const username = localStorage.getItem("username");
+            if (username) {
+                document.getElementById("loginMessage").innerText = `Logged in as ${username}`;
+                document.getElementById("postForm").style.display = "block";
+            } else {
+                document.getElementById("loginMessage").innerText = "Please log in to create posts.";
+                document.getElementById("postForm").style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadPosts();
+            loadChatRooms();
+            checkLogin();
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>요리 카테고리</h1>
+        <button onclick="window.location.href='category.html'">뒤로가기</button>
+    </div>
+
+    <div class="content">
+        <h2>요리 관련 게시글</h2>
+        <div id="postContainer"></div>
+
+        <h2>실시간 톡방</h2>
+        <div id="chatRoomContainer"></div>
+        <button onclick="window.location.href='openChating.html'">실시간 톡방으로 이동</button>
+
+        <p id="loginMessage"></p>
+        <div id="postForm" style="display: none;">
+            <h3>게시글 작성</h3>
+            <input type="text" id="title" placeholder="제목"><br>
+            <textarea id="content" placeholder="내용"></textarea><br>
+            <button onclick="createPost()">게시글 작성</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

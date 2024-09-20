@@ -27,7 +27,7 @@ public class ImagineApplication {
 //			return;
 //		}
 //		try {
-//			Member member = new Member("hennry", "henn123", "1990-01-03", "password12345", "hennry@example.com", "henn123");
+//			Member member = new Member("Tom", "Tom123", "1979-02-20", "tommy1234", "tom@example.com", "tommy");
 //			memberService.register(member);
 //			System.out.println("회원등록 성공!");
 //		} catch (Exception e) {

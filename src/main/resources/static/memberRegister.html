@@ -7,10 +7,10 @@
         async function registerMember() {
             const member = {
                 id: document.getElementById("id").value,
-                username: document.getElementById("username").value,
+                nickname: document.getElementById("nickname").value,
                 name: document.getElementById("name").value,
                 birthDate: document.getElementById("birthDate").value,
-                password: document.getElementById("password").value,
+                pw: document.getElementById("pw").value,
                 email: document.getElementById("email").value
             };
 
@@ -32,14 +32,14 @@
 <form onsubmit="event.preventDefault(); registerMember();">
     <label for="id">ID:</label>
     <input type="text" id="id" name="id"><br><br>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username"><br><br>
+    <label for="nickname">Nickname:</label>
+    <input type="text" id="nickname" name="nickname"><br><br>
     <label for="name">Name:</label>
     <input type="text" id="name" name="name"><br><br>
     <label for="birthDate">Birth Date:</label>
     <input type="date" id="birthDate" name="birthDate"><br><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><br><br>
+    <label for="pw">PW:</label>
+    <input type="password" id="pw" name="pw"><br><br>
     <label for="email">Email:</label>
     <input type="email" id="email" name="email"><br><br>
     <button type="submit">Register</button>

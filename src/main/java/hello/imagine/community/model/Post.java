@@ -2,9 +2,15 @@ package hello.imagine.community.model;
 
 import hello.imagine.login.model.Member;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Getter @Setter
 public class Post {
 
     @Id
@@ -25,60 +31,11 @@ public class Post {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // getters and setters
-    public Long getId() {
-        return id;
-    }
+    // 좋아요 개수를 저장하는 필드
+    private int likeCount = 0;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // 좋아요를 누른 사용자의 ID를 저장하는 필드
+    @ElementCollection
+    private Set<String> likedBy = new HashSet<>();
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Member getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Member author) {
-        this.author = author;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }

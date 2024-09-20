@@ -26,9 +26,17 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (attendanceRepository.existsByMemberAndDate(member, date)) {
             throw new Exception("Attendance already checked for today");
         }
-        Attendance attendance = new Attendance(member, date, true);
-        member.setPoints(member.getPoints() + 10);
+
+        // attendance 포인트 업데이트
+        Attendance attendance = new Attendance();
+        attendance.setMember(member);
+        attendance.setDate(date);
+        attendance.setPoints(20);
         attendanceRepository.save(attendance);
+
+
+        // Member 포인트 업데이트
+        member.setPoints(member.getPoints() + 20);
         memberRepository.save(member);
     }
 
