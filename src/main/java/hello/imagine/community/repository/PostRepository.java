@@ -11,4 +11,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByCategoryId(Long categoryId);
     List<Post> findByTitleContainingOrContentContaining(String title, String content);
     List<Post> findTop10ByOrderByCreatedAtDesc();
+    // 좋아요가 5개 이상인 게시글을 찾는 메서드
+    List<Post> findByLikeCountGreaterThanEqual(int likeCount);
 }

@@ -1,10 +1,25 @@
 package hello.imagine.community.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Category {
+
+    // 기본 생성자 (JPA용)
+    public Category() {}
+
+    // ID와 이름을 설정하는 생성자
+    public Category(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,28 +30,4 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
-    // getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
 }

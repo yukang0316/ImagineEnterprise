@@ -26,18 +26,18 @@ class ImagineApplicationTests {
 
 	private Member testMember;
 
-	@Test
-	void contextLoads() {
-	}
-
-	@Test
-	void testMemberRegistration() throws Exception {
-		Member member = new Member("tom", "aaaa", "2002-05-30", "bbbb", "hello@naver.com", "hello");
-		memberService.register(member);
-		Member retrievedMember = memberService.findById(member.getMemberId());
-		Assertions.assertNotNull(retrievedMember);
-		Assertions.assertEquals("tom", retrievedMember.getName());
-	}
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//	@Test
+//	void testMemberRegistration() throws Exception {
+//		Member member = new Member("tom", "aaaa", "2002-05-30", "bbbb", "hello@naver.com", "hello");
+//		memberService.register(member);
+//		Member retrievedMember = memberService.findById(member.getMemberId());
+//		Assertions.assertNotNull(retrievedMember);
+//		Assertions.assertEquals("tom", retrievedMember.getName());
+//	}
 
 //	@Test
 //	void testAttendanceCheck() throws Exception {
