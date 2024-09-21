@@ -64,6 +64,7 @@ private MemberRepository memberRepository;
                 .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다"));
 
         if (meeting.getMember().contains(member)) {
+            throw new RuntimeException("Member is already part of the meeting");
             throw new RuntimeException("회원은 이미 모임에 참여하고 있습니다");
         }
 

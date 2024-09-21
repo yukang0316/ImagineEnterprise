@@ -25,6 +25,8 @@ public class MeetingController {
 
     // 소모임 생성
     @PostMapping("/create")
+    public ResponseEntity<Meeting> createMeeting(@RequestBody Meeting meeting) {
+        return ResponseEntity.ok(meetingService.createMeeting(meeting));
     public ResponseEntity<String> createMeeting(@RequestBody Meeting meeting, @RequestParam Long memberId) {
         try {
             meetingService.createMeeting(meeting, memberId);
@@ -44,8 +46,6 @@ public class MeetingController {
 
     // 제목 + 내용 소모임 검색
     @GetMapping("/search")
-    public ResponseEntity<List<Meeting>> searchMeetingsByTitleOrContent(@RequestParam("keyword") String keyword) {
-        return ResponseEntity.ok(meetingService.searchMeetingByTitleOrContent(keyword));
     }
 
 
