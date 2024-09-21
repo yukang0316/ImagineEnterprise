@@ -1,9 +1,13 @@
 package hello.imagine.login.model;
 
 import hello.imagine.attendance.model.Attendance;
+import hello.imagine.meeting.model.Meeting;
+import hello.imagine.myPage.entity.Mypage;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Member {
@@ -24,6 +28,13 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Attendance> attendances;
+
+    @OneToMany(mappedBy = "member")
+    private List<Mypage> mypages;
+
+    @ManyToMany(mappedBy = "member")
+    private Set<Meeting> meetings = new HashSet<>();
+
 
     public Member() {}
 
@@ -109,5 +120,13 @@ public class Member {
 
     public void setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
+    }
+
+    public Set<Meeting> getMeetings() {
+        return meetings;
+    }
+
+    public void setMeetings(Set<Meeting> meetings) {
+        this.meetings = meetings;
     }
 }

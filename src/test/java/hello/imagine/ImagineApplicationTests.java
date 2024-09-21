@@ -1,7 +1,6 @@
 package hello.imagine;
 
-import hello.imagine.Group.Repository.CategoryRepository;
-import hello.imagine.Group.Repository.GroupRepository;
+
 import hello.imagine.login.model.Member;
 import hello.imagine.login.service.MemberService;
 import hello.imagine.attendance.model.Attendance;
@@ -38,11 +37,6 @@ class ImagineApplicationTests {
 //		}
 //	}
 
-	@Autowired
-	private GroupRepository groupRepository;
-
-	@MockBean
-	private CategoryRepository categoryRepository;
 
 	@Test
 	void contextLoads() {

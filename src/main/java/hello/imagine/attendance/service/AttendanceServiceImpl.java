@@ -1,68 +1,60 @@
-package hello.imagine.attendance.Service;
+    package hello.imagine.attendance.service;
 
-import hello.imagine.attendance.model.Attendance;
-import hello.imagine.attendance.Repository.AttendanceDbRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+    import hello.imagine.attendance.model.Attendance;
+    import hello.imagine.attendance.repository.AttendanceRepository;
+    import hello.imagine.login.model.Member;
+    import hello.imagine.login.repository.MemberRepository;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+    import java.time.LocalDate;
+    import java.time.YearMonth;
+    import java.util.List;
 
-@Service
-public class AttendServiceImpl implements AttendService {
+    @Service
+    public class AttendanceServiceImpl implements AttendanceService {
 
+        @Autowired
+        private AttendanceRepository attendanceRepository;
 
-    private final AttendanceDbRepository attendanceDbRepository;
+        @Autowired
+        private MemberRepository memberRepository;
 
-    @Autowired
-    public AttendServiceImpl(AttendanceDbRepository attendanceDbRepository) {
-        this.attendanceDbRepository = attendanceDbRepository;
-    }
-
-    @Override
-    public boolean CheckIn(String Id) {
-        Optional<Attendance> optionalAttendance = attendanceDbRepository.findById(Id);
-        Date now = new Date();
-
-        if (optionalAttendance.isPresent()) {
-            Attendance attendance = optionalAttendance.get();
-            Date Date = attendance.getDate();
-
-            if (!isSameDay(Date, now)) {
-                attendance.setPoint(attendance.getPoint() + 20);
-                attendance.setDate(now);
-                attendanceDbRepository.save(attendance);
-                return true;
-
-            } else {
-                return false;
+        @Override
+        public void checkAttendance(Long memberId, LocalDate date) throws Exception {
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("멤버를 찾을 수 없습니다."));
+            if (attendanceRepository.existsByMemberAndDate(member, date)) {
+                throw new Exception("오늘 출석이 이미 확인되었습니다.");
             }
 
+            // attendance 포인트 업데이트
+            Attendance attendance = new Attendance();
+            attendance.setMember(member);
+            attendance.setDate(date);
+            attendance.setPoints(5);
+            attendanceRepository.save(attendance);
 
-        } else {
-            Attendance attendance = new Attendance(Id,20, new Date());
-            attendanceDbRepository.save(attendance);
-            return true;
+
+            // Member 포인트 업데이트
+            member.setPoints(member.getPoints() + 5);
+            memberRepository.save(member);
         }
 
+        @Override
+        public List<Attendance> getMonthlyAttendance(Long memberId, int year, int month) throws Exception {
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("멤버를 찾을 수 없습니다."));
+            return attendanceRepository.findByMemberAndDateBetween(
+                    member,
+                    LocalDate.of(year, month, 1),
+                    LocalDate.of(year, month, YearMonth.of(year, month).lengthOfMonth())
+            );
+        }
+
+        @Override
+        public int getPoints(Long memberId) throws Exception {
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new Exception("멤버를 찾을 수 없습니다."));
+
+            return member.getPoints();  // Member 엔터티에서 포인트 조회
+        }
     }
-
-    @Override
-    public int getPoint(String Id) {
-        Optional<Attendance> optionalAttendance = attendanceDbRepository.findById(Id);
-        return optionalAttendance.map(Attendance::getPoint).orElse(0);
-    }
-
-    private boolean isSameDay(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.setTime(date1);
-        cal2.setTime(date2);
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-    }
-
-}
-
-

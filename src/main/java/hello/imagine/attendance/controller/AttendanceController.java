@@ -1,40 +1,64 @@
-package hello.imagine.attendance.Controller;
+package hello.imagine.attendance.controller;
 
-import hello.imagine.attendance.Service.AttendService;
+import hello.imagine.attendance.model.Attendance;
+import hello.imagine.attendance.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 
 @RestController
 @RequestMapping("/attendance")
 public class AttendanceController {
 
-    @Autowired
-    private final AttendService attendService;
+    private final AttendanceService attendanceService;
 
-    public AttendanceController(AttendService attendService) {
-        this.attendService = attendService;
+    @Autowired
+    public AttendanceController(AttendanceService attendanceService) {
+        this.attendanceService = attendanceService;
     }
 
-    @PostMapping("/checkin")
-    public ResponseEntity<String> checkIn(@RequestParam String Id) {
-
-        boolean CheckInSuccessful = attendService.CheckIn(Id);
-        if (CheckInSuccessful) {
-            return ResponseEntity.ok("출석체크 성공");
-        } else {
-            return ResponseEntity.status(400).body("하루에 한번만 출석체크 할 수 있습니다.");
+    @PostMapping("/check")
+    public String checkAttendance(@RequestParam String memberId) {
+        try {
+            Long id = Long.parseLong(memberId);
+            attendanceService.checkAttendance(id, LocalDate.now());
+            return "출석 확인됨";
+        } catch (NumberFormatException e) {
+            return "잘못된 멤버 ID";
+        } catch (Exception e) {
+            return "오류: " + e.getMessage();
         }
     }
 
-    @GetMapping("/point")
-    public ResponseEntity<Integer> getPoint(@RequestParam String Id) {
-        int points = attendService.getPoint(Id);
-        return ResponseEntity.ok(points);
+    @GetMapping("/{memberId}/monthly")
+    public List<Attendance> getMonthlyAttendance(@PathVariable String memberId, @RequestParam YearMonth ym) {
+        try {
+            Long id = Long.parseLong(memberId);
+            return attendanceService.getMonthlyAttendance(id, ym.getYear(), ym.getMonthValue());
+        } catch (NumberFormatException e) {
+            return null;
+        } catch (Exception e) {
+            // 로그를 남기거나 다른 방식으로 예외 처리할 수 있습니다.
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.status(500).body(e.getMessage());
+    @GetMapping("/points")
+    public String getPoints(@RequestParam String memberId) {
+        try {
+            Long id = Long.parseLong(memberId);
+            int points = attendanceService.getPoints(id);
+            return "포인트: " + points;
+        } catch (NumberFormatException e) {
+            return "잘못된 멤버 ID";
+        } catch (Exception e) {
+            return "오류: " + e.getMessage();
+        }
     }
+
+
 }
