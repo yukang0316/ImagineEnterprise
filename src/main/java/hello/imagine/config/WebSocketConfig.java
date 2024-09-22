@@ -1,4 +1,4 @@
-package hello.imagine.community.config;
+package hello.imagine.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
