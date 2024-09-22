@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+    // 카테고리 ID로 게시글 조회
     List<Post> findByCategoryId(Long categoryId);
     List<Post> findByTitleContainingOrContentContaining(String title, String content);
     List<Post> findTop10ByOrderByCreatedAtDesc();
