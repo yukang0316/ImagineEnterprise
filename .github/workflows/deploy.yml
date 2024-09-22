@@ -46,7 +46,7 @@ jobs:
 
       - name: SSH to EC2 and deploy
         run: |
-          ssh -i ssh_key -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} << 'EOF'
+          ssh -i ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << 'EOF'
           docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/myapp:latest
           docker stop myapp || true
           docker rm myapp || true
