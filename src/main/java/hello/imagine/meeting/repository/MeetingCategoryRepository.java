@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface MeetingCategoryRepository extends JpaRepository<MeetingCategory, Long> {
     Optional<MeetingCategory> findByName(String name);
+
 }

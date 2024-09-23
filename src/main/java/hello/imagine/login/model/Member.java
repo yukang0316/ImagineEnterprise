@@ -6,7 +6,6 @@ import hello.imagine.community.model.ChatMessage;
 import hello.imagine.meeting.model.Meeting;
 import hello.imagine.myPage.entity.Mypage;
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,12 +32,10 @@ public class Member {
     private List<Attendance> attendances;
 
     @OneToMany(mappedBy = "member")
-    @JsonIgnore
     private List<Mypage> mypages;
 
-    @OneToMany(mappedBy = "sender")
-    @JsonIgnore
-    private List<ChatMessage> sentMessages;
+    @ManyToMany(mappedBy = "member")
+    private Set<Meeting> meetings = new HashSet<>();
 
     @ManyToMany(mappedBy = "member")
     private Set<Meeting> meetings = new HashSet<>();
@@ -128,12 +125,12 @@ public class Member {
         this.attendances = attendances;
     }
 
-    public List<ChatMessage> getSentMessages() {
-        return sentMessages;
+    public Set<Meeting> getMeetings() {
+        return meetings;
     }
 
-    public void setSentMessages(List<ChatMessage> sentMessages) {
-        this.sentMessages = sentMessages;
+    public void setMeetings(Set<Meeting> meetings) {
+        this.meetings = meetings;
     }
 
     public java.util.Set<Meeting> getMeetings() {

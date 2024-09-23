@@ -19,5 +19,4 @@ public class ImagineApplication {
 		System.out.println("애플리케이션 실행됨");
 	}
 
-
 }
