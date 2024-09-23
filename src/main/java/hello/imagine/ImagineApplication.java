@@ -19,22 +19,4 @@ public class ImagineApplication {
 		System.out.println("애플리케이션 실행됨");
 	}
 
-//	@PostConstruct
-//	public void init() {
-//		System.out.println("Init 메소드 실행됨");
-//		if (memberService == null) {
-//			System.out.println("memberService 주입 실패!");
-//			return;
-//		}
-//		try {
-//			Member member = new Member("Tom", "Tom123", "1979-02-20", "tommy1234", "tom@example.com", "tommy");
-//			memberService.register(member);
-//			System.out.println("회원등록 성공!");
-//		} catch (Exception e) {
-//			System.out.println("Error: " + e.getMessage());
-//			e.printStackTrace();
-//		}
-//	}
-
-
 }

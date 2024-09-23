@@ -25,11 +25,11 @@ public class AttendanceController {
         try {
             Long id = Long.parseLong(memberId);
             attendanceService.checkAttendance(id, LocalDate.now());
-            return "Attendance checked";
+            return "출석 확인됨";
         } catch (NumberFormatException e) {
-            return "Invalid member ID";
+            return "잘못된 멤버 ID";
         } catch (Exception e) {
-            return "Error: " + e.getMessage();
+            return "오류: " + e.getMessage();
         }
     }
 
@@ -46,4 +46,19 @@ public class AttendanceController {
             return null;
         }
     }
+
+    @GetMapping("/points")
+    public String getPoints(@RequestParam String memberId) {
+        try {
+            Long id = Long.parseLong(memberId);
+            int points = attendanceService.getPoints(id);
+            return "포인트: " + points;
+        } catch (NumberFormatException e) {
+            return "잘못된 멤버 ID";
+        } catch (Exception e) {
+            return "오류: " + e.getMessage();
+        }
+    }
+
+
 }
