@@ -3,9 +3,13 @@ package hello.imagine.login.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.imagine.attendance.model.Attendance;
 import hello.imagine.community.model.ChatMessage;
+import hello.imagine.meeting.model.Meeting;
 import hello.imagine.myPage.entity.Mypage;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Member {
@@ -35,6 +39,9 @@ public class Member {
     @OneToMany(mappedBy = "sender")
     @JsonIgnore
     private List<ChatMessage> sentMessages;
+
+    @ManyToMany(mappedBy = "member")
+    private Set<Meeting> meetings = new HashSet<>();
 
     public Member() {}
 
@@ -128,4 +135,13 @@ public class Member {
     public void setSentMessages(List<ChatMessage> sentMessages) {
         this.sentMessages = sentMessages;
     }
+
+    public java.util.Set<Meeting> getMeetings() {
+        return meetings;
+    }
+
+    public void setMeetings(Set<Meeting> meetings){
+        this.meetings = meetings;
+    }
+
 }
