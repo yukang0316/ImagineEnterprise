@@ -35,4 +35,5 @@ public class MemberController {
     public Member getMemberById(@PathVariable Long id) {
         return memberService.findById(id);
     }
+
 }

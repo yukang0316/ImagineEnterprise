@@ -1,10 +1,10 @@
 package hello.imagine.login.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.imagine.attendance.model.Attendance;
 import hello.imagine.meeting.model.Meeting;
 import hello.imagine.myPage.entity.Mypage;
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +27,7 @@ public class Member {
     private int points;
 
     @OneToMany(mappedBy = "member")
+    @JsonIgnore
     private List<Attendance> attendances;
 
     @OneToMany(mappedBy = "member")
@@ -34,7 +35,6 @@ public class Member {
 
     @ManyToMany(mappedBy = "member")
     private Set<Meeting> meetings = new HashSet<>();
-
 
     public Member() {}
 
@@ -48,7 +48,6 @@ public class Member {
     }
 
     // getters and setters
-
 
     public Long getMemberId() {
         return memberId;

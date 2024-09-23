@@ -1,3 +1,4 @@
+
 package hello.imagine;
 
 import hello.imagine.login.model.Member;
@@ -29,4 +30,5 @@ public class ImagineApplication {
 			}
 		};
 	}
+
 }
