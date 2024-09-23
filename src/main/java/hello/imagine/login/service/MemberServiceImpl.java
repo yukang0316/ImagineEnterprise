@@ -22,13 +22,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void register(Member member) throws CustomDuplicateException {
         if (memberRepository.findById(member.getId()).isPresent()) {
-            throw new CustomDuplicateException("id is already exist");
+            throw new CustomDuplicateException("아이디가 이미 존재합니다.");
         }
         if (memberRepository.findByEmail(member.getEmail()).isPresent()) {
-            throw new CustomDuplicateException("email is already exist");
+            throw new CustomDuplicateException("이메일이 이미 존재합니다.");
         }
         if (memberRepository.findByNickname(member.getNickname()).isPresent()) {
-            throw new CustomDuplicateException("nickname is already exist");
+            throw new CustomDuplicateException("닉네임이 이미 존재합니다.");
         }
         memberRepository.save(member);
     }
@@ -41,8 +41,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member findById(String id) {
-        return memberRepository.findById(id).orElse(null);
+    public Member findById(Long memberId) {
+        return memberRepository.findById(memberId).orElse(null);
     }
 
     @Override
@@ -59,4 +59,5 @@ public class MemberServiceImpl implements MemberService {
     public void logout() {
         // 로그아웃 로직 구현
     }
+
 }

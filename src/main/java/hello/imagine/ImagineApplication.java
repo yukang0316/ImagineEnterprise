@@ -1,12 +1,13 @@
+
 package hello.imagine;
 
 import hello.imagine.login.model.Member;
 import hello.imagine.login.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ImagineApplication {
@@ -16,25 +17,18 @@ public class ImagineApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ImagineApplication.class, args);
-		System.out.println("애플리케이션 실행됨");
 	}
 
-//	@PostConstruct
-//	public void init() {
-//		System.out.println("Init 메소드 실행됨");
-//		if (memberService == null) {
-//			System.out.println("memberService 주입 실패!");
-//			return;
-//		}
-//		try {
-//			Member member = new Member("Tom", "Tom123", "1979-02-20", "tommy1234", "tom@example.com", "tommy");
-//			memberService.register(member);
-//			System.out.println("회원등록 성공!");
-//		} catch (Exception e) {
-//			System.out.println("Error: " + e.getMessage());
-//			e.printStackTrace();
-//		}
-//	}
-
+	@Bean
+	public CommandLineRunner commandLineRunner() {
+		return args -> {
+			try {
+				Member member = new Member("John Doe", "johndoe", "1990-01-01", "password", "johndoe@example.com", "johndoe123");
+				memberService.register(member);
+			} catch (Exception e) {
+				System.out.println("Error: " + e.getMessage());
+			}
+		};
+	}
 
 }
