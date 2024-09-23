@@ -1,0 +1,48 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'hello'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // JPA 의존성 추가
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'com.fasterxml.jackson.core:jackson-databind' // Jackson 의존성 추가
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'  // JWT 라이브러리 추가
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'  // JWT 구현체 추가
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'  // JWT JSON 처리기 추가 (Jackson 사용)
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.jsoup:jsoup:1.15.3'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+bootJar {
+	archiveFileName = 'imagine-0.0.1-SNAPSHOT.jar'
+}
+
+jar {
+	enabled = false
+}
