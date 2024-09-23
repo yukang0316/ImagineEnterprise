@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_INITDB_SKIP_TZINFO: "0"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data_new:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - imagine-network
+
+  imagine-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_container:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    command: ["sh", "-c", "/wait-for-it.sh mysql_container:3306 --timeout=180 --strict -- java -jar app.jar"]
+    ports:
+      - "8080:8080"
+    networks:
+      - imagine-network
+
+volumes:
+  mysql_data_new:
+
+networks:
+  imagine-network:
+    driver: bridge

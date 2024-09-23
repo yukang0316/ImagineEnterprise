@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Open Chatting</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .chat-room {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        #create-room-modal {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f9f9f9;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+<h1>카테고리: 요리</h1>
+<div id="chat-rooms"></div>
+<button id="create-room-btn">톡방 생성하기</button>
+
+<div id="create-room-modal">
+    <h2>실시간 톡방 만들기</h2>
+    <input type="text" id="room-name" placeholder="방 이름"><br>
+    <input type="text" id="room-description" placeholder="소개"><br>
+    <input type="number" id="max-participants" placeholder="최대 참여 인원"><br>
+    <button id="create-room-submit">생성</button>
+    <button id="close-modal-btn">닫기</button>
+</div>
+
+<script>
+    document.getElementById('create-room-btn').addEventListener('click', function() {
+        document.getElementById('create-room-modal').style.display = 'block';
+    });
+
+    document.getElementById('close-modal-btn').addEventListener('click', function() {
+        document.getElementById('create-room-modal').style.display = 'none';
+    });
+
+    document.getElementById('create-room-submit').addEventListener('click', async function() {
+        const name = document.getElementById('room-name').value;
+        const description = document.getElementById('room-description').value;
+        const maxParticipants = document.getElementById('max-participants').value;
+
+        const response = await fetch('http://localhost:8080/chat/room', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                description: description,
+                maxParticipants: maxParticipants,
+                category: '요리' // 카테고리를 명시합니다.
+            }),
+            credentials: 'same-origin' // 세션 쿠키를 사용하기 위해 필요합니다.
+        });
+
+        if (response.ok) {
+            alert('채팅방이 생성되었습니다.');
+            document.getElementById('create-room-modal').style.display = 'none';
+            loadChatRooms();
+        } else {
+            alert('채팅방 생성에 실패했습니다.');
+        }
+    });
+
+    async function loadChatRooms() {
+        const response = await fetch('http://localhost:8080/chat/rooms?category=요리', {
+            credentials: 'same-origin' // 세션 쿠키를 사용하기 위해 필요합니다.
+        });
+        const chatRooms = await response.json();
+
+        const chatRoomsDiv = document.getElementById('chat-rooms');
+        chatRoomsDiv.innerHTML = '';
+        chatRooms.forEach(room => {
+            const roomDiv = document.createElement('div');
+            roomDiv.className = 'chat-room';
+            roomDiv.textContent = `${room.name} (${room.participants.length}명)`;
+            roomDiv.onclick = () => {
+                window.location.href = `openChatting.html?roomId=${room.id}`;
+            };
+            chatRoomsDiv.appendChild(roomDiv);
+        });
+    }
+
+    loadChatRooms();
+</script>
+</body>
+</html>

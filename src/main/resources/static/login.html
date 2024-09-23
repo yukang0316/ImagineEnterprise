@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 관리 시스템</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 50px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .tab {
+            display: none;
+        }
+        .tab.active {
+            display: block;
+        }
+        .tab-buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            margin: 0 5px;
+            border-radius: 5px;
+        }
+        .tab-buttons button.active {
+            background-color: #28a745;
+            color: white;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            font-size: 18px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+        }
+        .form-group button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.id === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+            const buttons = document.querySelectorAll('.tab-buttons button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.tab === tabName) {
+                    button.classList.add('active');
+                }
+            });
+        }
+
+        async function login() {
+            const id = document.getElementById("login-id").value;
+            const pw = document.getElementById("login-pw").value;
+
+            const response = await fetch("http://localhost:8080/members/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    id: id,       // 변경된 부분: 'username' -> 'id'
+                    pw: pw        // 변경된 부분: 'password' -> 'pw'
+                }),
+                credentials: 'same-origin' // 세션 쿠키를 사용하기 위해 필요합니다.
+            });
+
+            if (response.ok) {
+                alert("Login successful!");
+                window.location.href = "/category.html"; // 로그인 성공 후 리다이렉션
+            } else {
+                alert("Login failed!");
+            }
+        }
+
+        async function registerMember() {
+            const member = {
+                id: document.getElementById("register-id").value,
+                nickname: document.getElementById("register-nickname").value,
+                name: document.getElementById("register-name").value,
+                birthDate: document.getElementById("register-birthDate").value,
+                pw: document.getElementById("register-pw").value,
+                email: document.getElementById("register-email").value
+            };
+
+            const response = await fetch("http://localhost:8080/members/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(member)
+            });
+
+            const result = await response.text();
+
+            if (response.ok) {
+                alert("회원가입 성공!");
+                showTab('login');
+            } else {
+                document.getElementById("register-result").innerText = result;
+            }
+        }
+
+        async function findId() {
+            const email = document.getElementById("find-id-email").value;
+
+            const response = await fetch("http://54.79.1.3:8080/members/findId", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({ email: email })
+            });
+
+            const result = await response.text();
+            document.getElementById("find-id-result").innerText = result;
+        }
+
+        async function findPw() {
+            const id = document.getElementById("find-pw-id").value;
+            const email = document.getElementById("find-pw-email").value;
+
+            const response = await fetch("http://54.79.1.3:8080/members/findPw", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({ id: id, email: email })
+            });
+
+            const result = await response.text();
+            document.getElementById("find-pw-result").innerText = result;
+        }
+    </script>
+</head>
+<body onload="showTab('login')">
+<div class="container">
+    <div class="tab-buttons">
+        <button data-tab="login" onclick="showTab('login')">로그인</button>
+        <button data-tab="register" onclick="showTab('register')">회원가입</button>
+        <button data-tab="find-id" onclick="showTab('find-id')">아이디 찾기</button>
+        <button data-tab="find-pw" onclick="showTab('find-pw')">비밀번호 찾기</button>
+    </div>
+
+    <div id="login" class="tab">
+        <h1>로그인</h1>
+        <div class="form-group">
+            <label for="login-id">ID:</label>
+            <input type="text" id="login-id" name="id">
+        </div>
+        <div class="form-group">
+            <label for="login-pw">PW:</label>
+            <input type="password" id="login-pw" name="pw">
+        </div>
+        <div class="form-group">
+            <button onclick="login()">로그인</button>
+        </div>
+        <p id="login-error" class="error"></p>
+    </div>
+
+    <div id="register" class="tab">
+        <h1>회원가입</h1>
+        <div class="form-group">
+            <label for="register-id">ID:</label>
+            <input type="text" id="register-id" name="id">
+        </div>
+        <div class="form-group">
+            <label for="register-nickname">Nickname:</label>
+            <input type="text" id="register-nickname" name="nickname">
+        </div>
+        <div class="form-group">
+            <label for="register-name">Name:</label>
+            <input type="text" id="register-name" name="name">
+        </div>
+        <div class="form-group">
+            <label for="register-birthDate">Birth Date:</label>
+            <input type="date" id="register-birthDate" name="birthDate">
+        </div>
+        <div class="form-group">
+            <label for="register-pw">PW:</label>
+            <input type="password" id="register-pw" name="pw">
+        </div>
+        <div class="form-group">
+            <label for="register-email">Email:</label>
+            <input type="email" id="register-email" name="email">
+        </div>
+        <div class="form-group">
+            <button onclick="registerMember()">회원가입</button>
+        </div>
+        <p id="register-result"></p>
+    </div>
+
+    <div id="find-id" class="tab">
+        <h1>아이디 찾기</h1>
+        <div class="form-group">
+            <label for="find-id-email">Email:</label>
+            <input type="email" id="find-id-email" name="email">
+        </div>
+        <div class="form-group">
+            <button onclick="findId()">아이디 찾기</button>
+        </div>
+        <p id="find-id-result"></p>
+    </div>
+
+    <div id="find-pw" class="tab">
+        <h1>비밀번호 찾기</h1>
+        <div class="form-group">
+            <label for="find-pw-id">ID:</label>
+            <input type="text" id="find-pw-id" name="id">
+        </div>
+        <div class="form-group">
+            <label for="find-pw-email">Email:</label>
+            <input type="email" id="find-pw-email" name="email">
+        </div>
+        <div class="form-group">
+            <button onclick="findPw()">비밀번호 찾기</button>
+        </div>
+        <p id="find-pw-result">
+    </div>
+</body>
+</html>

@@ -19,12 +19,28 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'mysql:mysql-connector-java:8.0.32'
+	runtimeOnly 'com.mysql:mysql-connector-j' // 명시적인 버전 추가
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // JPA 의존성 추가
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket' // WebSocket 의존성 추가
+	implementation 'com.fasterxml.jackson.core:jackson-databind' // Jackson 의존성 추가
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'  // JWT 라이브러리 추가
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'  // JWT 구현체 추가
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'  // JWT JSON 처리기 추가 (Jackson 사용)
+	compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootJar {
+	archiveFileName = 'imagine-0.0.1-SNAPSHOT.jar'
+}
+
+jar {
+	enabled = false
 }

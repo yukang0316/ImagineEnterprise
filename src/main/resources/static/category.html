@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Community</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .header, .category {
+            margin: 20px 0;
+        }
+        .category button {
+            padding: 15px;
+            margin: 5px;
+            width: 200px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        async function createCategory(name) {
+            const category = { name: name };
+            await fetch("http://localhost:8080/categories/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(category)
+            });
+        }
+
+        async function createDefaultCategories() {
+            await createCategory("요리");
+            // alert("요리 카테고리가 생성되었습니다.");
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            createDefaultCategories();
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>커뮤니티</h1>
+        <input type="text" placeholder="Search">
+        <button>+</button>
+    </div>
+
+    <div class="live-issues">
+        <h2>실시간 인기</h2>
+        <div>
+            <p>한화이글스 사직방 선발 1,208명</p>
+            <p>LG 트윈스 선발 789명</p>
+            <p>EPL 토트넘 리버풀 2,178명</p>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>카테고리별</h2>
+        <button onclick="window.location.href='cooking.html'">요리</button>
+<!--        <button onclick="alert('인사 카테고리')">인사</button>-->
+<!--        <button onclick="alert('취미 카테고리')">취미</button>-->
+<!--        <button onclick="alert('건강 카테고리')">건강</button>-->
+<!--        <button onclick="alert('체육 카테고리')">체육</button>-->
+<!--        <button onclick="alert('기타 카테고리')">기타</button>-->
+    </div>
+</div>
+</body>
+</html>
