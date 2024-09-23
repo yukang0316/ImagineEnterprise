@@ -14,11 +14,12 @@ import java.util.Optional;
 @Service
 public class MeetingService {
 
-@Autowired
-private MeetingRepository meetingRepository;
 
-@Autowired
-private MemberRepository memberRepository;
+    @Autowired
+    private MeetingRepository meetingRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
 
     // 모든 모임 조회
@@ -64,7 +65,6 @@ private MemberRepository memberRepository;
                 .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다"));
 
         if (meeting.getMember().contains(member)) {
-            throw new RuntimeException("Member is already part of the meeting");
             throw new RuntimeException("회원은 이미 모임에 참여하고 있습니다");
         }
 
@@ -115,4 +115,5 @@ private MemberRepository memberRepository;
         meeting.setMaxMembers(updatedMeeting.getMaxMembers());
         meetingRepository.save(meeting);
     }
+
 }
