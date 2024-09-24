@@ -26,4 +26,5 @@ public class MeetingCategoryController {
     public ResponseEntity<MeetingCategory> createMeetingCategory(@RequestBody MeetingCategory meetingCategory) {
         return ResponseEntity.ok(meetingCategoryService.createMeetingCategory(meetingCategory));
     }
+
 }

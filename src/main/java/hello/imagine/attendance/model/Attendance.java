@@ -15,8 +15,11 @@ public class Attendance {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Column(nullable = false)
     private LocalDate date;
+    @Column(nullable = false)
     private boolean checked;
+    @Column(nullable = false)
     private int points;
 
     public Attendance() {}
@@ -61,6 +64,7 @@ public class Attendance {
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
+
     public int getPoints() {
         return points;
     }

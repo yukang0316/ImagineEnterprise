@@ -1,5 +1,6 @@
 package hello.imagine;
 
+
 import hello.imagine.login.model.Member;
 import hello.imagine.login.service.MemberService;
 import hello.imagine.attendance.model.Attendance;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -25,4 +27,5 @@ class ImagineApplicationTests {
 	private AttendanceService attendanceService;
 
 	private Member testMember;
+
 }

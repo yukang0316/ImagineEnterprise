@@ -46,4 +46,5 @@ public class MeetingCategory {
     public void setMeetings(List<Meeting> meetings) {
         this.meetings = meetings;
     }
+
 }

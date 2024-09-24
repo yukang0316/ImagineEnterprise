@@ -7,7 +7,6 @@ import hello.imagine.meeting.model.Meeting;
 import hello.imagine.myPage.entity.Mypage;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +38,6 @@ public class Member {
     private List<Attendance> attendances;
 
     @OneToMany(mappedBy = "member")
-    @JsonIgnore
     private List<Mypage> mypages;
 
     @Setter
