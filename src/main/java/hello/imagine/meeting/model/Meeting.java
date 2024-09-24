@@ -31,13 +31,8 @@ public class Meeting {
     @JoinColumn(name = "leader_id")
     private Member leader;
 
-    @ManyToMany
-    @JoinTable(
-            name = "meeting_members", // 테이블 이름
-            joinColumns = @JoinColumn(name = "meeting_id"),
-            inverseJoinColumns = @JoinColumn(name = "member_id")
-    )
-    private Set<Member> member = new HashSet<>();
+    @ManyToMany(mappedBy = "meetings")
+    private Set<Member> members = new HashSet<>();
 
 
     // getters and setters
@@ -101,12 +96,12 @@ public class Meeting {
         this.maxMembers = maxMembers;
     }
 
-    public Set<Member> getMember() {
-        return member;
+    public Set<Member> getMembers() {
+        return members;
     }
 
-    public void setMember(Set<Member> member) {
-        this.member = member;
+    public void setMembers(Set<Member> members) {
+        this.members = members;
     }
 
 
