@@ -14,6 +14,7 @@ import java.util.Optional;
 @Service
 public class MeetingService {
 
+
     @Autowired
     private MeetingRepository meetingRepository;
 
@@ -114,4 +115,5 @@ public class MeetingService {
         meeting.setMaxMembers(updatedMeeting.getMaxMembers());
         meetingRepository.save(meeting);
     }
+
 }
