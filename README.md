@@ -1,1 +1,1 @@
-ci/cd 수정12
+instance change ci/cd 
