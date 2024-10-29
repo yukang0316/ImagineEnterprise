@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ public class CategoryController {
     public ResponseEntity<List<PostDTO>> getPostsByCategory(@PathVariable Long categoryId) {
         List<Post> posts = categoryService.getPostsByCategoryId(categoryId);
         List<PostDTO> postDTOs = posts.stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .map(PostDTO::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(postDTOs);
