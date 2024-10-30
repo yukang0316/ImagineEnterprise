@@ -59,4 +59,5 @@ public class MemberServiceImpl implements MemberService {
     public void logout() {
         // 로그아웃 로직 구현
     }
+
 }

@@ -1,5 +1,6 @@
 package hello.imagine.login.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.imagine.attendance.model.Attendance;
 import hello.imagine.groupbuying.entity.Wishlist;
 import hello.imagine.meeting.model.Meeting;
@@ -18,16 +19,18 @@ public class Member {
     private Long memberId;
 
     private String name;
+
     @Column(unique = true)
     private String id;
+
     private String birthDate;
     private String pw;
     private String email;
     private String nickname;
-
     private int points;
 
     @OneToMany(mappedBy = "member")
+    @JsonIgnore
     private List<Attendance> attendances;
 
     @OneToMany(mappedBy = "member")
@@ -50,8 +53,7 @@ public class Member {
         this.nickname = nickname;
     }
 
-    // getters and setters
-
+    // Getters and Setters
 
     public Long getMemberId() {
         return memberId;
@@ -123,6 +125,22 @@ public class Member {
 
     public void setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
+    }
+
+    public List<Mypage> getMypages() {
+        return mypages;
+    }
+
+    public void setMypages(List<Mypage> mypages) {
+        this.mypages = mypages;
+    }
+
+    public List<Wishlist> getWishlists() {
+        return wishlists;
+    }
+
+    public void setWishlists(List<Wishlist> wishlists) {
+        this.wishlists = wishlists;
     }
 
     public Set<Meeting> getMeetings() {

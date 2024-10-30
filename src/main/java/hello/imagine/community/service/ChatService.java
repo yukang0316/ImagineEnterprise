@@ -17,6 +17,7 @@ import java.util.List;
 
 @Service
 public class ChatService {
+
     @Autowired
     private MemberRepository memberRepository;
 
@@ -91,4 +92,5 @@ public class ChatService {
     public List<ChatRoom> getPopularChatRooms() {
         return chatRoomRepository.findByParticipantCountGreaterThanEqual(5);
     }
+
 }

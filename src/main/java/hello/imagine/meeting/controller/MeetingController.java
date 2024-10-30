@@ -46,7 +46,7 @@ public class MeetingController {
     @GetMapping("/search")
     public ResponseEntity<List<Meeting>> searchMeetings(@RequestParam String keyword) {
         List<Meeting> meetings = meetingService.searchMeetingByTitleOrContent(keyword);
-        return ResponseEntity.ok(meetings);
+        return new ResponseEntity<>(meetings, HttpStatus.OK); // 검색 결과가 있을 경우 200 OK 반환
     }
 
 
@@ -92,4 +92,5 @@ public class MeetingController {
         meetingService.updateMeeting(id, updatedMeeting);
         return ResponseEntity.ok("Meeting updated successfully!");
     }
+
 }

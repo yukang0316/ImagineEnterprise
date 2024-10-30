@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/posts/popular")
 public class PopularPostController {
+
     @Autowired
     private PostService postService;
 

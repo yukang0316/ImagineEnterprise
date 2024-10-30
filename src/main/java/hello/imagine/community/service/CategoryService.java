@@ -1,7 +1,9 @@
 package hello.imagine.community.service;
 
 import hello.imagine.community.model.Category;
+import hello.imagine.community.model.Post;
 import hello.imagine.community.repository.CategoryRepository;
+import hello.imagine.community.repository.PostRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +14,12 @@ import java.util.Optional;
 
 @Service
 public class CategoryService {
+
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     // 고정된 카테고리 목록을 정의합니다.
     private final List<Category> fixedCategories = Arrays.asList(
@@ -38,6 +44,12 @@ public class CategoryService {
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    // 카테고리 ID로 게시글 목록 가져오는 메서드
+    public List<Post> getPostsByCategoryId(Long categoryId) {
+        // PostRepository를 이용해 해당 카테고리 ID로 게시글 가져오기
+        return postRepository.findByCategoryId(categoryId);
     }
 
     public Category findByName(String name) {

@@ -73,7 +73,6 @@ public class Mypage {
         this.email = member.getEmail();
     }
 
-
     public String getNickname() {
         return member != null ? member.getNickname() : nickname;
     }

@@ -9,14 +9,15 @@ import hello.imagine.login.model.Member;
 import hello.imagine.login.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class PostService {
+
     @Autowired
     private PostRepository postRepository;
 
@@ -109,4 +110,5 @@ public class PostService {
     public List<Post> getPopularPosts() {
         return postRepository.findByLikeCountGreaterThanEqual(5);
     }
+
 }

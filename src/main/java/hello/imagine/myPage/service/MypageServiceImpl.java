@@ -1,13 +1,6 @@
 package hello.imagine.myPage.service;
 
-import hello.imagine.community.model.ChatRoom;
-import hello.imagine.community.model.Post;
-import hello.imagine.community.repository.PostRepository;
-import hello.imagine.groupbuying.repository.OrderRepository;
 import hello.imagine.login.model.Member;
-import hello.imagine.login.repository.MemberRepository;
-import hello.imagine.meeting.model.Meeting;
-import hello.imagine.meeting.repository.MeetingRepository;
 import hello.imagine.myPage.entity.Mypage;
 import hello.imagine.myPage.entity.MypageId;
 import hello.imagine.myPage.entity.Mypage_Communitylist;
@@ -66,7 +59,6 @@ public class MypageServiceImpl implements MypageService{
     public Mypage findById(MypageId mypageId) {
         return myPageRepository.findById(mypageId).orElse(null);
     }
-
 
     @Override
     public Mypage findByNickname(String nickname) {

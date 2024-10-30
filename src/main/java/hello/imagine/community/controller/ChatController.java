@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
+
     @Autowired
     private ChatService chatService;
 
@@ -60,4 +61,5 @@ public class ChatController {
     public ResponseEntity<List<ChatRoom>> getPopularChatRooms() {
         return ResponseEntity.ok(chatService.getPopularChatRooms());
     }
+
 }
