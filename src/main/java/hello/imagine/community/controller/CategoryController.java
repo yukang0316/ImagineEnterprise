@@ -38,6 +38,7 @@ public class CategoryController {
         List<PostDTO> postDTOs = posts.stream()
                 .map(PostDTO::new)
                 .collect(Collectors.toList());
+        Collections.reverse(postDTOs);
         return ResponseEntity.ok(postDTOs);
     }
 
