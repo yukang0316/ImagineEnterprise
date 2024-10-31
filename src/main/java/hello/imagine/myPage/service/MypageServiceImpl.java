@@ -107,7 +107,6 @@ public class MypageServiceImpl implements MypageService{
         meetingRepository.save(meeting); // 모임 정보 저장
     }
 
-
     // 소모임 개설자에 의한 모집 공고 수정
     @Override
     public Meeting updateMeeting(Long meetingId, Meeting updatedMeeting, Long memberId) {

@@ -22,7 +22,15 @@ public class ChatRoom {
     private String description;
     private int maxParticipants;
     private int participantCount;
-    private String category;
+    private Long categoryId;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id", nullable = false)
+    private Member creator; // 생성자 필드 추가
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category; // 카테고리 필드 추가
 
     @ManyToMany
     @JoinTable(
