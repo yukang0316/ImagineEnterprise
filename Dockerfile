@@ -16,4 +16,4 @@ COPY wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
 # Specify the command to run the application
-CMD ["sh", "-c", "/wait-for-it.sh mysql_container:3306 --timeout=180 --strict -- java -jar app.jar"]
+CMD ["sh", "-c", "/wait-for-it.sh mysql_container:3306 --timeout=300 --strict -- java -jar app.jar"]
