@@ -20,7 +20,7 @@ public class CommentController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Comment> createComment(@RequestBody CommentDTO commentDTO, @RequestHeader("Authorization") String token) {
         String userId = jwtUtil.extractUserId(token.substring(7)); // "Bearer " 제거 후, extractUserId 사용
         if (userId == null) {
