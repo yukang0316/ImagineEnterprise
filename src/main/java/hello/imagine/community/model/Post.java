@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Post {
 
     @Id
@@ -50,3 +51,4 @@ public class Post {
     private boolean notificationEnabled = true;
 
 }
+

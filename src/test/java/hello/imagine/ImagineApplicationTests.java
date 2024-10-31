@@ -1,18 +1,11 @@
 package hello.imagine;
 
+
+import hello.imagine.attendance.service.AttendanceService;
 import hello.imagine.login.model.Member;
 import hello.imagine.login.service.MemberService;
-import hello.imagine.attendance.model.Attendance;
-import hello.imagine.attendance.service.AttendanceService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.List;
 
 @SpringBootTest
 class ImagineApplicationTests {
@@ -25,4 +18,5 @@ class ImagineApplicationTests {
 	private AttendanceService attendanceService;
 
 	private Member testMember;
+
 }
