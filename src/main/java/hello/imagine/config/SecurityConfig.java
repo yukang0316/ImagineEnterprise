@@ -50,7 +50,7 @@ public class SecurityConfig {
                                                 "http://15.165.92.121:8080"
                                         )
                                 );
-                                configuration.setAllowedMethods(Collections.singletonList("*"));
+                                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                                 configuration.setMaxAge(3600L);
@@ -67,7 +67,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // CSRF 비활성화
                 .authorizeHttpRequests((auth -> auth
-                        .requestMatchers("/public/**").permitAll()  // 인증 없이 접근 가능한 경로
+                        .requestMatchers("/**").permitAll()  // 인증 없이 접근 가능한 경로
                         .anyRequest().authenticated())  // 나머지 요청은 인증 필요
                 )
                 .sessionManagement(session -> session
