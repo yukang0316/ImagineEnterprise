@@ -12,4 +12,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     // 참여자가 5명 이상인 채팅방을 찾는 메서드
     List<ChatRoom> findByParticipantCountGreaterThanEqual(int participantCount);
+
+    List<ChatRoom> findByCategoryId(Long categoryId);
 }
