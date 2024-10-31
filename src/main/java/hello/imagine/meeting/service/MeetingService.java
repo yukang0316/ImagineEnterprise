@@ -2,14 +2,22 @@ package hello.imagine.meeting.service;
 
 import hello.imagine.login.model.Member;
 import hello.imagine.login.repository.MemberRepository;
+import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.model.Meeting;
 
+import hello.imagine.meeting.model.MeetingCategory;
+import hello.imagine.meeting.model.Subcategory;
+import hello.imagine.meeting.repository.MeetingCategoryRepository;
 import hello.imagine.meeting.repository.MeetingRepository;
+import hello.imagine.meeting.repository.SubcategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Service
 public class MeetingService {
@@ -21,34 +29,122 @@ public class MeetingService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private MeetingCategoryRepository meetingCategoryRepository;
+
+    @Autowired
+    private SubcategoryRepository subcategoryRepository;
 
     // 모든 모임 조회
     public List<Meeting> findAllMeetings() {
         return meetingRepository.findAll();
     }
 
+
+
     // 모임 생성
     public Meeting createMeeting(Meeting meeting, Long memberId) {
+
+        // 상위 카테고리 존재 확인
+        MeetingCategory meetingCategory = meetingCategoryRepository.findById(meeting.getMeetingCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다: ID = " + meeting.getMeetingCategory().getId()));
+        meeting.setMeetingCategory(meetingCategory); // 이미 존재하는 카테고리 설정
+
+        // 하위 카테고리 존재 확인
+        Subcategory subcategory = subcategoryRepository.findById(meeting.getSubcategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("하위 카테고리가 존재하지 않습니다: ID = " + meeting.getSubcategory().getId()));
+
+
+        // 하위 카테고리의 상위 카테고리 ID 확인
+        Long parentId = subcategory.getParentCategory().getId(); // Long 타입으로 저장
+        if (!parentId.equals(meetingCategory.getId())) { // 비교
+            throw new IllegalArgumentException("하위 카테고리가 상위 카테고리와 일치하지 않습니다.");
+        }
+
+        meeting.setSubcategory(subcategory); // 하위 카테고리 설정
+
+
+        meeting.setSubcategory(subcategory); // 하위 카테고리 설정
+
+        // 모임장 존재 확인
         Member leader = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다"));
+
+
+        // 소모임 설정
         meeting.setLeader(leader);
         meeting.getMembers().add(leader);
         meeting.setMemberCount(1);
         return meetingRepository.save(meeting);
     }
 
-    // 특정 모임 조회
-    public Optional<Meeting> findMeetingById(Long meetingId) {
-        return meetingRepository.findById(meetingId);
+
+
+    // 특정 소모임 조회
+    public List<MeetingDTO> findMeetingById(Long meetingId) {
+        Optional<Meeting> meetings = meetingRepository.findById(meetingId);
+        return meetings.stream()
+                .map(meeting -> new MeetingDTO (
+                        meeting.getTitle(),
+                        meeting.getIntroduction(),
+                        meeting.getContent(),
+                        meeting.getMemberCount(),
+                        meeting.getMeetingCategory().getId(),
+                        meeting.getSubcategory().getId()
+                ))
+                .collect(Collectors.toList());
     }
 
+
+
+    // 카테고리ID로 소모임 불러오기
+    public List<MeetingDTO> getMeetingsByCategoryId(Long categoryId) {
+        List<Meeting> meetings = meetingRepository.findByMeetingCategoryId(categoryId);
+        return meetings.stream()
+                .map(meeting -> new MeetingDTO(
+                        meeting.getTitle(),
+                        meeting.getIntroduction(),
+                        meeting.getContent(),
+                        meeting.getMemberCount(),
+                        meeting.getMeetingCategory().getId(),
+                        meeting.getSubcategory().getId()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // 하위 카테고리ID로 소모임 불러오기
+    public List<MeetingDTO> getMeetingsBySubcategoryId(Long subcategoryId) {
+        List<Meeting> meetings = meetingRepository.findBySubcategoryId(subcategoryId);
+        return meetings.stream()
+                .map(meeting -> new MeetingDTO(
+                        meeting.getTitle(),
+                        meeting.getIntroduction(),
+                        meeting.getContent(),
+                        meeting.getMemberCount(),
+                        meeting.getSubcategory().getId(),
+                        meeting.getSubcategory().getId()// 하위 카테고리 ID
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
     //제목 + 내용 검색
-    public List<Meeting> searchMeetingByTitleOrContent(String keyword) {
+    public List<MeetingDTO> searchMeetingByTitleOrContent(String keyword) {
         List<Meeting> meetings = meetingRepository.searchByTitleOrContentContainingIgnoreCase(keyword);
         if(meetings.isEmpty()) {
             throw new RuntimeException("검색결과가 없습니다");
         }
-        return meetings;
+        return meetings.stream()
+                .map(meeting -> new MeetingDTO (
+                        meeting.getTitle(),
+                        meeting.getIntroduction(),
+                        meeting.getContent(),
+                        meeting.getMemberCount(),
+                        meeting.getMeetingCategory().getId(),
+                        meeting.getSubcategory().getId()
+                ))
+                .collect(Collectors.toList());
     }
 
     // 소모임 입장
@@ -100,7 +196,7 @@ public class MeetingService {
     // 소모임 삭제
     public void deleteMeeting(Long id) {
         Meeting meeting = meetingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다"));
+                .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다."));
 
         meetingRepository.delete(meeting);
     }
@@ -109,11 +205,12 @@ public class MeetingService {
     // 소모임 수정
     public void updateMeeting(Long id, Meeting updatedMeeting) {
         Meeting meeting = meetingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Meeting not found"));
+                .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다."));
         meeting.setTitle(updatedMeeting.getTitle());
         meeting.setContent(updatedMeeting.getContent());
         meeting.setMaxMembers(updatedMeeting.getMaxMembers());
         meetingRepository.save(meeting);
     }
+
 
 }
