@@ -67,4 +67,4 @@ services:
       - db                                     # db 서비스가 준비된 후 시작
 
 volumes:
-  mysql_data:                                  # MySQL 데이터 영구 저장 볼륨 정의
+  mysql_data:                                   # MySQL 데이터 영구 저장 볼륨 정의
