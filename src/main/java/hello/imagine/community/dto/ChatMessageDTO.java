@@ -5,7 +5,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
+
 public class ChatMessageDTO {
 
     private String content;

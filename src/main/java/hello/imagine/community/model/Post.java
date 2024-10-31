@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Post {
 
     @Id
@@ -45,4 +46,9 @@ public class Post {
     @ElementCollection
     private Set<String> likedBy = new HashSet<>();
 
+    //알림 설정 필드
+    @Column(name = "notification_enabled", nullable = false)
+    private boolean notificationEnabled = true;
+
 }
+

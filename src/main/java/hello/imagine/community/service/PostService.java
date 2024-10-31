@@ -1,10 +1,10 @@
 package hello.imagine.community.service;
 
 import hello.imagine.community.dto.PostDTO;
-import hello.imagine.community.model.Post;
 import hello.imagine.community.model.Category;
-import hello.imagine.community.repository.PostRepository;
+import hello.imagine.community.model.Post;
 import hello.imagine.community.repository.CategoryRepository;
+import hello.imagine.community.repository.PostRepository;
 import hello.imagine.login.model.Member;
 import hello.imagine.login.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;

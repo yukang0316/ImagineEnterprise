@@ -1,5 +1,6 @@
 package hello.imagine.meeting.service;
 
+import hello.imagine.meeting.model.MeetingCategory;
 import hello.imagine.meeting.repository.MeetingCategoryRepository;
 import hello.imagine.meeting.model.MeetingCategory;
 import org.springframework.beans.factory.annotation.Autowired;

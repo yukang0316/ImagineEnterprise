@@ -31,10 +31,10 @@ public class ChatController {
         return ResponseEntity.ok(chatService.createChatRoom(chatRoomDTO, userId));
     }
 
-    @GetMapping("/rooms")
-    public ResponseEntity<List<ChatRoom>> getChatRoomsByCategory(@RequestParam String category) {
-        return ResponseEntity.ok(chatService.getChatRoomsByCategory(category));
-    }
+//    @GetMapping("/rooms")
+//    public ResponseEntity<List<ChatRoom>> getChatRoomsByCategory(@RequestParam String category) {
+//        return ResponseEntity.ok(chatService.getChatRoomsByCategory(category));
+//    }
 
     @PostMapping("/room/{roomId}/join")
     public ResponseEntity<ChatRoom> joinChatRoom(@PathVariable Long roomId, @RequestHeader("Authorization") String token) {
