@@ -32,6 +32,7 @@ public class MeetingCategoryController {
     public ResponseEntity<MeetingCategory> createMeetingCategory(@RequestBody MeetingCategory meetingCategory) {
         return ResponseEntity.ok(meetingCategoryService.createMeetingCategory(meetingCategory));
     }
+
     */
 
     // 카테고리로 소모임 불러오기

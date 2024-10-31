@@ -46,7 +46,8 @@ public class SecurityConfig {
                                 CorsConfiguration configuration = new CorsConfiguration();
                                 configuration.setAllowedOrigins(
                                         Arrays.asList(
-                                                "http://localhost:8080"
+                                                "http://localhost:8080",
+                                                "http://15.165.92.121:8080"
                                         )
                                 );
                                 configuration.setAllowedMethods(Collections.singletonList("*"));

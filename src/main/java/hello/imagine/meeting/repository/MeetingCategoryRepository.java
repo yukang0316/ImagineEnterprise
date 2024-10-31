@@ -14,5 +14,6 @@ public interface MeetingCategoryRepository extends JpaRepository<MeetingCategory
     List<MeetingCategory> findByParentCategory(MeetingCategory parentCategory);
     List<MeetingCategory> findByParentCategoryIsNull();
     boolean existsByNameAndParentCategory(String name, MeetingCategory parentCategory);
+
 }
 
