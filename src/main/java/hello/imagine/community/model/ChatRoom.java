@@ -22,7 +22,6 @@ public class ChatRoom {
     private String description;
     private int maxParticipants;
     private int participantCount;
-    private Long categoryId;
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
