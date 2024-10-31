@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,7 @@ public class CategoryController {
         List<PostDTO> postDTOs = posts.stream()
                 .map(PostDTO::new)
                 .collect(Collectors.toList());
+        Collections.reverse(postDTOs);
         return ResponseEntity.ok(postDTOs);
     }
 
