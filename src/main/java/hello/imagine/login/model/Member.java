@@ -2,7 +2,6 @@ package hello.imagine.login.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.imagine.attendance.model.Attendance;
-import hello.imagine.groupbuying.entity.Wishlist;
 import hello.imagine.meeting.model.Meeting;
 import hello.imagine.myPage.entity.Mypage;
 import jakarta.persistence.*;
@@ -35,9 +34,6 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Mypage> mypages;
-
-    @OneToMany(mappedBy = "member")
-    private List<Wishlist> wishlists;
 
     @ManyToMany(mappedBy = "member")
     private Set<Meeting> meetings = new HashSet<>();
@@ -133,14 +129,6 @@ public class Member {
 
     public void setMypages(List<Mypage> mypages) {
         this.mypages = mypages;
-    }
-
-    public List<Wishlist> getWishlists() {
-        return wishlists;
-    }
-
-    public void setWishlists(List<Wishlist> wishlists) {
-        this.wishlists = wishlists;
     }
 
     public Set<Meeting> getMeetings() {

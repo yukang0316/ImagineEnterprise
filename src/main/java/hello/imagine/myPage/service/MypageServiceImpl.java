@@ -1,6 +1,12 @@
 package hello.imagine.myPage.service;
 
+import hello.imagine.community.model.ChatRoom;
+import hello.imagine.community.model.Post;
+import hello.imagine.community.repository.PostRepository;
 import hello.imagine.login.model.Member;
+import hello.imagine.login.repository.MemberRepository;
+import hello.imagine.meeting.model.Meeting;
+import hello.imagine.meeting.repository.MeetingRepository;
 import hello.imagine.myPage.entity.Mypage;
 import hello.imagine.myPage.entity.MypageId;
 import hello.imagine.myPage.entity.Mypage_Communitylist;
@@ -18,7 +24,6 @@ import java.util.Optional;
 @Service
 public class MypageServiceImpl implements MypageService{
     private final MyPageRepository myPageRepository;
-    private final OrderRepository orderRepository;
     private final MeetingRepository meetingRepository;
     private final PostRepository postRepository;
     private final Mypage_MeetinglistRepository mypage_meetinglistRepository;
@@ -26,9 +31,8 @@ public class MypageServiceImpl implements MypageService{
     private final MemberRepository memberRepository;
 
     @Autowired
-    public MypageServiceImpl(MyPageRepository myPageRepository, OrderRepository orderRepository, MeetingRepository meetingRepository, PostRepository postRepository, Mypage_MeetinglistRepository mypage_meetinglistRepository, Mypage_CommunitylistRepository mypage_communitylistRepository, MemberRepository memberRepository) {
+    public MypageServiceImpl(MyPageRepository myPageRepository, MeetingRepository meetingRepository, PostRepository postRepository, Mypage_MeetinglistRepository mypage_meetinglistRepository, Mypage_CommunitylistRepository mypage_communitylistRepository, MemberRepository memberRepository) {
         this.myPageRepository = myPageRepository;
-        this.orderRepository = orderRepository;
         this.meetingRepository = meetingRepository;
         this.postRepository = postRepository;
         this.mypage_meetinglistRepository = mypage_meetinglistRepository;
@@ -60,6 +64,7 @@ public class MypageServiceImpl implements MypageService{
         return myPageRepository.findById(mypageId).orElse(null);
     }
 
+
     @Override
     public Mypage findByNickname(String nickname) {
         return myPageRepository.findByNickname(nickname).orElse(null);
@@ -86,7 +91,6 @@ public class MypageServiceImpl implements MypageService{
     }
 
     // 소모임 탈퇴
-
     @Override
     public void leaveMeeting(Long meetingId, Long memberId) {
         Meeting meeting = meetingRepository.findById(meetingId)
@@ -218,16 +222,24 @@ public class MypageServiceImpl implements MypageService{
     // 좋아요 알림 설정
     @Override
     public void updateLikeNotificationSettings(Long memberId, boolean likeNotification) {
+        // Mypage를 memberId로 가져옵니다.
         Mypage mypage = getMypageByMemberId(memberId);
+
+        // Mypage의 좋아요 알림 설정을 업데이트합니다.
         mypage.setLikeNotificationEnabled(likeNotification);
         myPageRepository.save(mypage);
 
-        // 사용자가 작성한 Post의 알림 설정을 반영
-        List<Post> userPosts = postRepository.findByAuthor(mypage.getMember());
+        // 사용자가 작성한 Post의 알림 설정을 업데이트합니다.
+        List<Post> userPosts = postRepository.findAll(); // 모든 게시글을 조회한 후
+
         for (Post post : userPosts) {
-            post.setNotificationEnabled(likeNotification); // 좋아요 알림 설정 반영
-            postRepository.save(post);
+            // 게시글의 작성자가 Mypage의 member와 같은지 확인합니다.
+            if (post.getAuthor().getMemberId().equals(mypage.getMemberId())) {
+                post.setNotificationEnabled(likeNotification); // 좋아요 알림 설정 반영
+                postRepository.save(post);
+            }
         }
     }
+
 
 }
