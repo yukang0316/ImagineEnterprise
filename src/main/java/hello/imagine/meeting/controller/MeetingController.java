@@ -1,5 +1,6 @@
 package hello.imagine.meeting.controller;
 
+import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.model.Meeting;
 import hello.imagine.meeting.service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +37,19 @@ public class MeetingController {
 
     // 특정 소모임 조회
     @GetMapping("/{meetingId}")
-    public ResponseEntity<Meeting> getMeetingById(@PathVariable Long meetingId) {
-        return meetingService.findMeetingById(meetingId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<List<MeetingDTO>> getMeetingById(@PathVariable Long meetingId) {
+        List<MeetingDTO> meetings = meetingService.findMeetingById(meetingId);
+        return new ResponseEntity<>(meetings, HttpStatus.OK);
     }
+
+
+
+
 
     // 제목 + 내용 소모임 검색
     @GetMapping("/search")
-    public ResponseEntity<List<Meeting>> searchMeetings(@RequestParam String keyword) {
-        List<Meeting> meetings = meetingService.searchMeetingByTitleOrContent(keyword);
+    public ResponseEntity<List<MeetingDTO>> searchMeetings(@RequestParam String keyword) {
+        List<MeetingDTO> meetings = meetingService.searchMeetingByTitleOrContent(keyword);
         return new ResponseEntity<>(meetings, HttpStatus.OK); // 검색 결과가 있을 경우 200 OK 반환
     }
 
@@ -87,10 +91,12 @@ public class MeetingController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    // 소모임 수정
+    @PutMapping("/update/{MeetingId}")
     public ResponseEntity<String> updateMeeting(@PathVariable Long id, @RequestBody Meeting updatedMeeting) {
         meetingService.updateMeeting(id, updatedMeeting);
         return ResponseEntity.ok("Meeting updated successfully!");
     }
+
 
 }
