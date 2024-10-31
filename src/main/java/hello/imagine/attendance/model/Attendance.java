@@ -32,7 +32,6 @@ public class Attendance {
     }
 
     // getters and setters
-
     public Long getId() {
         return id;
     }

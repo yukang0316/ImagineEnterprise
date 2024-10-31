@@ -14,11 +14,12 @@ import java.util.Optional;
 @Service
 public class MeetingService {
 
-@Autowired
-private MeetingRepository meetingRepository;
 
-@Autowired
-private MemberRepository memberRepository;
+    @Autowired
+    private MeetingRepository meetingRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
 
     // 모든 모임 조회
@@ -31,7 +32,7 @@ private MemberRepository memberRepository;
         Member leader = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다"));
         meeting.setLeader(leader);
-        meeting.getMember().add(leader);
+        meeting.getMembers().add(leader);
         meeting.setMemberCount(1);
         return meetingRepository.save(meeting);
     }
@@ -63,13 +64,12 @@ private MemberRepository memberRepository;
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다"));
 
-        if (meeting.getMember().contains(member)) {
-            throw new RuntimeException("Member is already part of the meeting");
+        if (meeting.getMembers().contains(member)) {
             throw new RuntimeException("회원은 이미 모임에 참여하고 있습니다");
         }
 
         // 멤버를 추가하고 현재 인원을 증가시킴
-        meeting.getMember().add(member);
+        meeting.getMembers().add(member);
         meeting.setMemberCount(meeting.getMemberCount() + 1);
 
         meetingRepository.save(meeting);
@@ -83,12 +83,12 @@ private MemberRepository memberRepository;
                 .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다"));
 
         // 멤버가 모임에 속해 있는지 확인
-        if (meeting.getMember().contains(member)) {
-            meeting.getMember().remove(member);
+        if (meeting.getMembers().contains(member)) {
+            meeting.getMembers().remove(member);
             member.getMeetings().remove(meeting);
 
             // 회원 수를 모임의 멤버 수로 설정
-            meeting.setMemberCount(meeting.getMember().size());
+            meeting.setMemberCount(meeting.getMembers().size());
             meetingRepository.save(meeting);
             memberRepository.save(member);
         } else {
@@ -115,4 +115,5 @@ private MemberRepository memberRepository;
         meeting.setMaxMembers(updatedMeeting.getMaxMembers());
         meetingRepository.save(meeting);
     }
+
 }

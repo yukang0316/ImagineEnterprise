@@ -1,5 +1,6 @@
 package hello.imagine.meeting.controller;
 
+import hello.imagine.meeting.model.MeetingCategory;
 import hello.imagine.meeting.service.MeetingCategoryService;
 import hello.imagine.meeting.model.MeetingCategory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +27,5 @@ public class MeetingCategoryController {
     public ResponseEntity<MeetingCategory> createMeetingCategory(@RequestBody MeetingCategory meetingCategory) {
         return ResponseEntity.ok(meetingCategoryService.createMeetingCategory(meetingCategory));
     }
+
 }
