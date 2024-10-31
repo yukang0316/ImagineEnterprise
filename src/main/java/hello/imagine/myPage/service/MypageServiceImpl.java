@@ -97,15 +97,16 @@ public class MypageServiceImpl implements MypageService{
                 .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다"));
 
         // 여기서 멤버가 모임에 속해 있는지 확인 후 탈퇴 처리
-        if (meeting.getMember().stream().noneMatch(m -> m.getId().equals(memberId))) {
+        if (meeting.getMembers().stream().noneMatch(m -> m.getId().equals(memberId))) {
             throw new RuntimeException("회원이 모임에 속해 있지 않습니다");
         }
 
         // 멤버를 모임에서 제거하고 현재 인원을 감소시킴
-        meeting.getMember().removeIf(m -> m.getId().equals(memberId));
-        meeting.setMemberCount(meeting.getMember().size());
-        meetingRepository.save(meeting);
+        meeting.getMembers().removeIf(m -> m.getId().equals(memberId));
+        meeting.setMemberCount(meeting.getMembers().size()); // 업데이트된 멤버 수 설정
+        meetingRepository.save(meeting); // 모임 정보 저장
     }
+
 
     // 소모임 개설자에 의한 모집 공고 수정
     @Override
@@ -240,6 +241,4 @@ public class MypageServiceImpl implements MypageService{
             }
         }
     }
-
-
 }
