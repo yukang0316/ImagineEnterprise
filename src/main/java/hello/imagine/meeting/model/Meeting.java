@@ -101,7 +101,7 @@ public class Meeting {
         this.maxMembers = maxMembers;
     }
 
-    public Set<Member> getMember() {
+    public Set<Member> getMembers() {
         return member;
     }
 

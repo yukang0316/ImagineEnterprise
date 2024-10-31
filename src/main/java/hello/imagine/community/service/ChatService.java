@@ -88,9 +88,9 @@ public class ChatService {
         return chatMessageRepository.save(chatMessage);
     }
 
-    public List<ChatRoom> getChatRoomsByCategory(String category) {
-        return chatRoomRepository.findByCategoryOrderByParticipantsDesc(category);
-    }
+//    public List<ChatRoom> getChatRoomsByCategory( category) {
+//        return chatRoomRepository.findByCategoryOrderByParticipantsDesc(category);
+//    }
 
     public Long getMemberIdByUserId(String userId) {
         Member member = memberRepository.findById(userId)
