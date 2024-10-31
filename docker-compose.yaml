@@ -59,7 +59,7 @@ services:
       dockerfile: Dockerfile                   # 사용할 Dockerfile 지정
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql_container:3306/${MYSQL_DATABASE}  # MySQL 컨테이너에 연결
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}                        # 데이터베이스 사용자 이름
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}                # 데이터베이스 사용자 이름
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}                # 데이터베이스 비밀번호
     ports:
       - "8080:8080"                            # 애플리케이션 포트 매핑
