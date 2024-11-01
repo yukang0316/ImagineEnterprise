@@ -35,8 +35,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean login(String id, String pw) {
+        System.out.println("Attempting to login with id=" + id + " and pw=" + pw);
         return memberRepository.findById(id)
-                .map(member -> member.getPw().equals(pw))
+                .map(member -> {
+                    System.out.println("Found member: " + member.getId());
+                    return member.getPw().equals(pw);
+                })
                 .orElse(false);
     }
 

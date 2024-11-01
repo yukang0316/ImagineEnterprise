@@ -37,6 +37,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
+        System.out.println("login start");
         String id = loginRequest.getId();
         String pw = loginRequest.getPw();
 
@@ -51,6 +52,7 @@ public class MemberController {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Member> getMemberById(@PathVariable String id, @RequestHeader("Authorization") String token) {
