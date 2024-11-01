@@ -10,6 +10,11 @@ import java.util.Optional;
 
 @Repository
 public interface MeetingCategoryRepository extends JpaRepository<MeetingCategory, Long> {
+    Optional<MeetingCategory> findByName(String name);
+    List<MeetingCategory> findByParentCategory(MeetingCategory parentCategory);
+    List<MeetingCategory> findByParentCategoryIsNull();
+    boolean existsByNameAndParentCategory(String name, MeetingCategory parentCategory);
+
 
 }
 

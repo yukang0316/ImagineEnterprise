@@ -2,8 +2,10 @@ package hello.imagine.community.service;
 
 import hello.imagine.community.dto.ChatMessageDTO;
 import hello.imagine.community.dto.ChatRoomDTO;
+import hello.imagine.community.model.Category;
 import hello.imagine.community.model.ChatMessage;
 import hello.imagine.community.model.ChatRoom;
+import hello.imagine.community.repository.CategoryRepository;
 import hello.imagine.community.repository.ChatMessageRepository;
 import hello.imagine.community.repository.ChatRoomRepository;
 import hello.imagine.login.model.Member;
@@ -30,6 +32,9 @@ public class ChatService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     public ChatRoom createChatRoom(ChatRoomDTO chatRoomDTO, String userId) {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setName(chatRoomDTO.getName());
@@ -41,7 +46,12 @@ public class ChatService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
         chatRoom.getParticipants().add(creator);
-        chatRoom.setCategory(chatRoomDTO.getCategory());
+        chatRoom.setCreator(creator); // chatRoom의 생성자 설정
+
+        // 카테고리 설정
+        Category category = categoryRepository.findById(chatRoomDTO.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
+        chatRoom.setCategory(category);
 
         return chatRoomRepository.save(chatRoom);
     }
@@ -78,8 +88,8 @@ public class ChatService {
         return chatMessageRepository.save(chatMessage);
     }
 
-    public List<ChatRoom> getChatRoomsByCategory(String category) {
-        return chatRoomRepository.findByCategoryOrderByParticipantsDesc(category);
+    public List<ChatRoom> getChatRoomsByCategory(Long categoryId) {
+        return chatRoomRepository.findByCategoryId(categoryId);
     }
 
     public Long getMemberIdByUserId(String userId) {

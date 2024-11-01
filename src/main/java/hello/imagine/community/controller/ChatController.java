@@ -31,9 +31,10 @@ public class ChatController {
         return ResponseEntity.ok(chatService.createChatRoom(chatRoomDTO, userId));
     }
 
+    //실시간 채팅방 눌렀을때 리스트 반환
     @GetMapping("/rooms")
-    public ResponseEntity<List<ChatRoom>> getChatRoomsByCategory(@RequestParam String category) {
-        return ResponseEntity.ok(chatService.getChatRoomsByCategory(category));
+    public ResponseEntity<List<ChatRoom>> getChatRoomsByCategory(@RequestParam Long categoryId) {
+        return ResponseEntity.ok(chatService.getChatRoomsByCategory(categoryId));
     }
 
     @PostMapping("/room/{roomId}/join")

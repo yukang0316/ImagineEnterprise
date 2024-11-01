@@ -5,10 +5,8 @@ import hello.imagine.login.model.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.HashSet;
 import java.util.Set;
-
 
 @Entity
 public class Meeting {
@@ -31,7 +29,6 @@ public class Meeting {
     @JoinColumn(name = "meeting_category_id")
     @JsonBackReference
     private MeetingCategory meetingCategory;
-
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id")

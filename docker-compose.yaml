@@ -1,3 +1,44 @@
+#version: '3.8'
+#
+#services:
+#  db:
+#    image: mysql:8.0
+#    container_name: mysql_container
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#      MYSQL_DATABASE: ${MYSQL_DATABASE}
+#      MYSQL_INITDB_SKIP_TZINFO: "0"
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - mysql_data_new:/var/lib/mysql
+#    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+#    networks:
+#      - imagine-network
+#
+#  imagine-app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - db
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_container:3306/${MYSQL_DATABASE}
+#      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+#      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+#    command: ["sh", "-c", "/wait-for-it.sh mysql_container:3306 --timeout=300 --strict -- java -jar app.jar"]
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - imagine-network
+#
+#volumes:
+#  mysql_data_new:
+#
+#networks:
+#  imagine-network:
+#    driver: bridge
+
 version: '3.8'
 
 services:
@@ -5,36 +46,25 @@ services:
     image: mysql:8.0
     container_name: mysql_container
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_INITDB_SKIP_TZINFO: "0"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}       # MySQL root 비밀번호
+      MYSQL_DATABASE: ${MYSQL_DATABASE}              # 생성할 기본 데이터베이스 이름
     ports:
-      - "3306:3306"
+      - "3306:3306"                            # MySQL 포트 매핑
     volumes:
-      - mysql_data_new:/var/lib/mysql
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    networks:
-      - imagine-network
+      - mysql_data:/var/lib/mysql              # MySQL 데이터 영구 저장 볼륨
 
-  imagine-app:
+  app:
     build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - db
+      context: .                               # 현재 디렉토리에서 빌드
+      dockerfile: Dockerfile                   # 사용할 Dockerfile 지정
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_container:3306/${MYSQL_DATABASE}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-    command: ["sh", "-c", "/wait-for-it.sh mysql_container:3306 --timeout=180 --strict -- java -jar app.jar"]
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_container:3306/${MYSQL_DATABASE}  # MySQL 컨테이너에 연결
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}                # 데이터베이스 사용자 이름
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}                # 데이터베이스 비밀번호
     ports:
-      - "8080:8080"
-    networks:
-      - imagine-network
+      - "8080:8080"                            # 애플리케이션 포트 매핑
+    depends_on:
+      - db                                     # db 서비스가 준비된 후 시작
 
 volumes:
-  mysql_data_new:
-
-networks:
-  imagine-network:
-    driver: bridge
+  mysql_data:                                   # MySQL 데이터 영구 저장 볼륨 정의

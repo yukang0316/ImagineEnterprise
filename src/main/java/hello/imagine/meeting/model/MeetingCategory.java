@@ -102,6 +102,4 @@ public class MeetingCategory {
         this.meetings = meetings;
     }
 
-
-
 }
