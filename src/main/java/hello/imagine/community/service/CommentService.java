@@ -1,8 +1,10 @@
 package hello.imagine.community.service;
 
 import hello.imagine.community.dto.CommentDTO;
+import hello.imagine.community.model.Category;
 import hello.imagine.community.model.Comment;
 import hello.imagine.community.model.Post;
+import hello.imagine.community.repository.CategoryRepository;
 import hello.imagine.login.model.Member;
 import hello.imagine.community.repository.CommentRepository;
 import hello.imagine.community.repository.PostRepository;
@@ -20,6 +22,9 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private PostRepository postRepository;
 
     @Autowired
@@ -28,6 +33,10 @@ public class CommentService {
     public Comment createComment(CommentDTO commentDTO) {
         Comment comment = new Comment();
         comment.setContent(commentDTO.getContent());
+
+        Category category = categoryRepository.findById(commentDTO.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category with ID " + commentDTO.getCategoryId() + " not found"));
+        comment.setCategory(category);
 
         Post post = postRepository.findById(commentDTO.getPostId())
                 .orElseThrow(() -> new RuntimeException("Post with ID " + commentDTO.getPostId() + " not found"));

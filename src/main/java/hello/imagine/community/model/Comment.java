@@ -1,5 +1,6 @@
 package hello.imagine.community.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import hello.imagine.login.model.Member;
 import lombok.Getter;
@@ -17,11 +18,18 @@ public class Comment {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
+    private Category category;
+
+    @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
+    @JsonIgnore
     private Post post;
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonIgnore
     private Member author;
 
     @Column(nullable = false)
