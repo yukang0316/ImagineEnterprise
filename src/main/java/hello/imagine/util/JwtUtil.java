@@ -49,7 +49,7 @@ public class JwtUtil {
         return createToken(userDetails.getUsername());
     }
 
-    private String createToken(String subject) {
+    public String createToken(String subject) {
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))

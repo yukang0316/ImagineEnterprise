@@ -11,5 +11,6 @@ public interface MemberService {
     Member findByEmail(String email);
     Member findByNickname(String nickname);
     void logout();
+    Long findMemberIdByUserId(String id);
 
 }

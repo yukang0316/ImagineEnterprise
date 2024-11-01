@@ -4,6 +4,7 @@ import hello.imagine.login.exception.CustomDuplicateException;
 import hello.imagine.login.model.Member;
 import hello.imagine.login.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
@@ -59,5 +60,13 @@ public class MemberServiceImpl implements MemberService {
     public void logout() {
         // 로그아웃 로직 구현
     }
+
+    public Long findMemberIdByUserId(String id) {
+        // 예시 코드 - userId를 기반으로 Member 엔티티에서 memberId 조회
+        return memberRepository.findById(id)
+                .map(Member::getMemberId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
 
 }
