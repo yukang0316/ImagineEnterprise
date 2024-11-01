@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 public class PostDTO {
+    private Long id;
     private String title;
     private String content;
     private String authorId; // String으로 정의, Member ID를 저장
@@ -19,6 +20,7 @@ public class PostDTO {
 
     // Post 엔티티를 인자로 받는 생성자 추가
     public PostDTO(Post post) {
+        this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.authorId = post.getAuthor().getId();  // Member ID 추출
