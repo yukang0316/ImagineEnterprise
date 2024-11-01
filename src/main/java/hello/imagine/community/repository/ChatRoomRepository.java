@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-//    List<ChatRoom> findByCategoryOrderByParticipantCountDesc(Category category);
+    //List<ChatRoom> findByCategoryOrderByParticipantCountDesc(Category category);
 
     // 참여자가 5명 이상인 채팅방을 찾는 메서드
     List<ChatRoom> findByParticipantCountGreaterThanEqual(int participantCount);
