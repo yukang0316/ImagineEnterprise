@@ -112,6 +112,8 @@ public class MeetingService {
                 .collect(Collectors.toList());
     }
 
+
+
     // 하위 카테고리ID로 소모임 불러오기
     public List<MeetingDTO> getMeetingsBySubcategoryId(Long subcategoryId) {
         List<Meeting> meetings = meetingRepository.findBySubcategoryId(subcategoryId);
@@ -200,6 +202,7 @@ public class MeetingService {
 
         meetingRepository.delete(meeting);
     }
+
 
 
     // 소모임 수정

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MeetingCategoryService {
@@ -26,6 +25,7 @@ public class MeetingCategoryService {
             new MeetingCategory(6L, "문화")
     );
 
+
     // 애플리케이션 시작 시 실행되는 메서드
     @PostConstruct
     public void init() {
@@ -39,11 +39,12 @@ public class MeetingCategoryService {
 
 
 
-
     // 모든 카테고리 조회
     public List<MeetingCategory> getAllCategories() {
         return meetingCategoryRepository.findAll();
     }
+
+
 
     // 카테고리 만들기
     public MeetingCategory createMeetingCategory(MeetingCategory category) {

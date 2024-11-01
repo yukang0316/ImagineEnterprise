@@ -44,6 +44,4 @@ public class MeetingCategoryController {
         return ResponseEntity.ok(meetings);
     }
 
-
-
 }

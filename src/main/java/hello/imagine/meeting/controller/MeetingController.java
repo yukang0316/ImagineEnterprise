@@ -43,9 +43,6 @@ public class MeetingController {
     }
 
 
-
-
-
     // 제목 + 내용 소모임 검색
     @GetMapping("/search")
     public ResponseEntity<List<MeetingDTO>> searchMeetings(@RequestParam String keyword) {
@@ -98,5 +95,6 @@ public class MeetingController {
         return ResponseEntity.ok("Meeting updated successfully!");
     }
 
+    // 소모임 게시글
 
 }
