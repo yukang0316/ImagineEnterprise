@@ -49,7 +49,12 @@ public class Meeting {
 
 
     // 멤버와 소모임 연결
-    @ManyToMany(mappedBy = "meetings")
+    @ManyToMany
+    @JoinTable(
+            name = "meeting_members",
+            joinColumns = @JoinColumn(name = "meeting_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     private Set<Member> members = new HashSet<>();
 
 
