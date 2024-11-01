@@ -47,7 +47,8 @@ public class SecurityConfig {
                                 configuration.setAllowedOrigins(
                                         Arrays.asList(
                                                 "http://localhost:8080",
-                                                "http://15.165.92.121:8080"
+                                                "http://15.165.92.121:8080",
+                                                "http://172.18.0.3:8080"
                                         )
                                 );
                                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
