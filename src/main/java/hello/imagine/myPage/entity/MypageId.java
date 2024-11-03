@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class MypageId implements Serializable {
-    private Long memberId;
+    private String id;  // id를 String 타입으로 변경
 
     public MypageId() {}
 
-    public MypageId(Long memberId) {
-        this.memberId = memberId;
+    public MypageId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -17,19 +17,19 @@ public class MypageId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MypageId mypageId = (MypageId) o;
-        return Objects.equals(memberId, mypageId.memberId);
+        return Objects.equals(id, mypageId.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(memberId);
+        return Objects.hash(id);
     }
 
     // getters and setters
-    public Long getMemberId() {
-        return memberId;
+    public String getId() {
+        return id;
     }
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setId(String id) {
+        this.id = id;
     }
 }

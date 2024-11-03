@@ -9,8 +9,8 @@ import hello.imagine.login.model.Member;
 import hello.imagine.login.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,11 +26,17 @@ public class PostService {
 
     @Autowired
     private MemberRepository memberRepository;
+    //@Autowired
+    //private Mypage_CommunitylistRepository mypage_CommunitylistRepository;
 
     public Post createPost(PostDTO postDTO) {
         Post post = new Post();
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
+
+        // PostDTO의 authorId를 직접 설정
+        //String authorId = postDTO.getAuthorId();
+        //postDTO.setAuthorId(authorId); // Post에 setAuthorId 메서드가 있다고 가정
 
         Member author = memberRepository.findById(postDTO.getAuthorId())
                 .orElseThrow(() -> new RuntimeException("Author with ID " + postDTO.getAuthorId() + " not found"));
@@ -108,7 +114,7 @@ public class PostService {
 
     // 좋아요가 5개 이상인 인기 게시글을 가져오는 메서드
     public List<Post> getPopularPosts() {
-        return postRepository.findByLikeCountGreaterThanEqual(5);
+        return postRepository.findByLikeCountGreaterThanEqual(1);
     }
 
 }

@@ -21,17 +21,17 @@ public class NotificationServiceImpl implements NotificationService {  // 인터
 
     // 특정 Mypage의 모든 알림을 조회
     @Override
-    public List<Notification> getNotificationsByMypage(Long memberId) {
-        Mypage mypage = mypageRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new RuntimeException("Mypage not found with memberId: " + memberId));
+    public List<Notification> getNotificationsByMypage(String id) {
+        Mypage mypage = mypageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mypage not found with memberId: " + id));
         return notificationRepository.findByMypage(mypage);
     }
 
     // 특정 Mypage에 새로운 알림을 생성
     @Override
-    public Notification createNotificationForMypage(Long memberId, String type, String message) {
-        Mypage mypage = mypageRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new RuntimeException("Mypage not found with memberId: " + memberId));
+    public Notification createNotificationForMypage(String id, String type, String message) {
+        Mypage mypage = mypageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mypage not found with id: " + id));
 
         Notification notification = new Notification();
         notification.setMypage(mypage);
@@ -54,9 +54,9 @@ public class NotificationServiceImpl implements NotificationService {  // 인터
 
     // 특정 Mypage의 모든 알림을 읽음 처리
     @Override
-    public void markAllAsRead(Long memberId) {
-        Mypage mypage = mypageRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new RuntimeException("Mypage not found with memberId: " + memberId));
+    public void markAllAsRead(String id) {
+        Mypage mypage = mypageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mypage not found with memberId: " + id));
 
         List<Notification> notifications = notificationRepository.findByMypage(mypage);
         for (Notification notification : notifications) {

@@ -1,5 +1,6 @@
 package hello.imagine.myPage.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.imagine.login.model.Member;
 import jakarta.persistence.*;
 
@@ -10,13 +11,13 @@ import jakarta.persistence.*;
 @IdClass(MypageId.class)
 public class Mypage {
     @Id
-    @Column(name = "member_id")
-    private Long memberId; // 기본 키와 외래 키 둘 다 사용 가능
+    @Column(name = "id")
+    private String id; // 기본 키와 외래 키 둘 다 사용 가능
 
     @MapsId
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "member_id", insertable = true, updatable = true, nullable = false)
-    //referencedColumnName = "memberId"
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+    @JsonIgnore
     private Member member;
 
     @Column
@@ -49,17 +50,17 @@ public class Mypage {
 
     public Mypage(Member member) {
         this.member = member;
-        this.memberId = member.getMemberId();
+        this.id = member.getId();
         this.nickname = member.getNickname();
         this.points = member.getPoints();
         this.email = member.getEmail();
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public String getId() {
+        return id;
     }
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Member getMember() {
@@ -69,7 +70,7 @@ public class Mypage {
     public void setMember(Member member) {
         this.member = member;
         if (member != null) {
-            this.memberId = member.getMemberId();
+            this.id = member.getId();
             this.nickname = member.getNickname();
             this.points = member.getPoints();
             this.email = member.getEmail();

@@ -7,11 +7,9 @@ import hello.imagine.login.model.Member;
 public interface MemberService {
     void register(Member member) throws CustomDuplicateException;
     boolean login(String id, String pw);
-    Member findById(Long memberId);
+    Member findById(String id);
     Member findByEmail(String email);
     Member findByNickname(String nickname);
     void logout();
-    Long findMemberIdByUserId(String id);
-    void updateMember(Member member);
 
 }

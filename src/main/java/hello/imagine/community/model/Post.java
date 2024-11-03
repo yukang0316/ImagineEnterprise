@@ -1,7 +1,6 @@
 package hello.imagine.community.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.imagine.login.model.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
