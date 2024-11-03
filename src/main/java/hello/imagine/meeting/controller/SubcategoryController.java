@@ -1,5 +1,6 @@
 package hello.imagine.meeting.controller;
 
+import hello.imagine.meeting.DTO.LocationDTO;
 import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.model.MeetingCategory;
 import hello.imagine.meeting.model.Subcategory;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.xml.stream.Location;
 import java.util.List;
 
 @RestController
@@ -27,8 +29,8 @@ public class SubcategoryController {
 
     // 하위 카테고리에 속한 소모임 불러오기
     @GetMapping("/meetings/subcategory/{subcategoryId}")
-    public ResponseEntity<List<MeetingDTO>> getMeetingsBySubcategoryId(@PathVariable Long subcategoryId) {
-        List<MeetingDTO> meetings = meetingService.getMeetingsBySubcategoryId(subcategoryId);
+    public ResponseEntity<List<LocationDTO>> getMeetingsBySubcategoryId(@PathVariable Long subcategoryId) {
+        List<LocationDTO> meetings = meetingService.getMeetingsBySubcategoryId(subcategoryId);
         return ResponseEntity.ok(meetings);
     }
 

@@ -2,6 +2,7 @@ package hello.imagine.meeting.service;
 
 import hello.imagine.login.model.Member;
 import hello.imagine.login.repository.MemberRepository;
+import hello.imagine.meeting.DTO.LocationDTO;
 import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.model.Meeting;
 
@@ -123,16 +124,17 @@ public class MeetingService {
 
 
     // 카테고리ID로 소모임 불러오기
-    public List<MeetingDTO> getMeetingsByCategoryId(Long categoryId) {
+    public List<LocationDTO> getMeetingsByCategoryId(Long categoryId) {
         List<Meeting> meetings = meetingRepository.findByMeetingCategoryId(categoryId);
         return meetings.stream()
-                .map(meeting -> new MeetingDTO(
+                .map(meeting -> new LocationDTO(
                         meeting.getId(),
                         meeting.getTitle(),
                         meeting.getIntroduction(),
                         meeting.getContent(),
                         meeting.getMemberCount(),
-                        meeting.getAddress(),
+                        meeting.getLatitude(),
+                        meeting.getLongitude(),
                         meeting.getMeetingCategory().getId(),
                         meeting.getSubcategory().getId()
                 ))
@@ -142,16 +144,17 @@ public class MeetingService {
 
 
     // 하위 카테고리ID로 소모임 불러오기
-    public List<MeetingDTO> getMeetingsBySubcategoryId(Long subcategoryId) {
+    public List<LocationDTO> getMeetingsBySubcategoryId(Long subcategoryId) {
         List<Meeting> meetings = meetingRepository.findBySubcategoryId(subcategoryId);
         return meetings.stream()
-                .map(meeting -> new MeetingDTO(
+                .map(meeting -> new LocationDTO(
                         meeting.getId(),
                         meeting.getTitle(),
                         meeting.getIntroduction(),
                         meeting.getContent(),
                         meeting.getMemberCount(),
-                        meeting.getAddress(),
+                        meeting.getLatitude(),
+                        meeting.getLongitude(),
                         meeting.getSubcategory().getId(),
                         meeting.getSubcategory().getId()// 하위 카테고리 ID
                 ))
@@ -181,11 +184,18 @@ public class MeetingService {
     }
 
     // 소모임 입장
-    public void joinMeeting(Long meetingId, String memberId) {
-        Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다"));
+    public void joinMeeting(String memberId, Long Id, Long meetingCategoryId, Long subcategoryId) {
 
-        // 현재 인원이 최대 인원보다 작은지 확인
+
+        Meeting meeting = meetingRepository.findById(Id)
+                .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다."));
+
+        if (meeting.getMeetingCategory().getId() != meetingCategoryId ||
+                (meeting.getSubcategory() != null && meeting.getSubcategory().getId() != subcategoryId)) {
+            throw new RuntimeException("카테고리 또는 하위 카테고리가 일치하지 않습니다.");
+        }
+
+
         if (meeting.getMemberCount() >= meeting.getMaxMembers()) {
             throw new RuntimeException("모임이 이미 꽉 찼습니다");
         }
