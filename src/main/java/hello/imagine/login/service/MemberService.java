@@ -12,5 +12,6 @@ public interface MemberService {
     Member findByNickname(String nickname);
     void logout();
     Long findMemberIdByUserId(String id);
+    void updateMember(Member member);
 
 }

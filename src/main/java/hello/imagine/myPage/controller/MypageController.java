@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/mypage")
@@ -40,6 +41,21 @@ public class MypageController {
             return ResponseEntity.notFound().build(); // Handle case where Mypage is not found
         }
         return ResponseEntity.ok(mypage.getNickname()); // Return nickname
+    }
+
+    // Member ID로 포인트 조회
+    @GetMapping("/points/{memberId}")
+    public ResponseEntity<Integer> getPointsByMemberId(@PathVariable Long memberId) {
+        // Member ID로 Member 엔티티를 조회
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null) {
+            // Member가 존재하지 않을 경우 오류 응답 반환
+            return ResponseEntity.notFound().build();
+        }
+
+        // Member의 닉네임으로 Mypage 조회 후 포인트 반환
+        Mypage mypage = mypageService.findByNickname(member.getNickname());
+        return ResponseEntity.ok(mypage.getPoints());
     }
 
     // GET 요청으로 Member ID를 받아 Mypage를 업데이트
@@ -71,21 +87,6 @@ public class MypageController {
         // Mypage 엔티티 생성 또는 업데이트
         Mypage updatedMypage = mypageService.createOrUpdateMypageFromMember(member);
         return ResponseEntity.ok(updatedMypage);
-    }
-
-    // Member ID로 포인트 조회
-    @GetMapping("/points/{memberId}")
-    public ResponseEntity<Integer> getPointsByMemberId(@PathVariable Long memberId) {
-        // Member ID로 Member 엔티티를 조회
-        Member member = memberRepository.findById(memberId).orElse(null);
-        if (member == null) {
-            // Member가 존재하지 않을 경우 오류 응답 반환
-            return ResponseEntity.notFound().build();
-        }
-
-        // Member의 닉네임으로 Mypage 조회 후 포인트 반환
-        Mypage mypage = mypageService.findByNickname(member.getNickname());
-        return ResponseEntity.ok(mypage.getPoints());
     }
 
     // 소모임 내역 조회
@@ -152,5 +153,60 @@ public class MypageController {
         // 참여하고 있는 채팅방 목록 반환
         List<ChatRoom> chatRooms = mypageService.getParticipatingChatRooms(member);
         return ResponseEntity.ok(chatRooms);
+    }
+
+    // 닉네임 변경
+    @PostMapping("/setting/nickname/{memberId}")
+    public ResponseEntity<String> updateNickname(@RequestBody Map<String, Object> request) {
+        Long memberId = ((Number) request.get("memberId")).longValue();
+        String newNickname = (String) request.get("newNickname");
+
+        try {
+            mypageService.updateNickname(memberId, newNickname);
+            return ResponseEntity.ok("Nickname updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to update nickname: " + e.getMessage());
+        }
+    }
+
+    // 이메일 조회
+    @GetMapping("/email/{memberId}")
+    public ResponseEntity<String> getEmail(@PathVariable Long memberId) {
+        Mypage mypage = mypageService.getMypageByMemberId(memberId);
+        String email = mypage.getEmail();
+        return ResponseEntity.ok(email);
+    }
+
+    // 이메일 변경
+    @PostMapping("/setting/email/{memberId}")
+    public ResponseEntity<String> updateEmail(@RequestParam Long memberId, @RequestParam String newEmail) {
+        try {
+            // 이메일을 변경하는 서비스 호출
+            mypageService.updateEmail(memberId, newEmail);
+            return ResponseEntity.ok("Email updated successfully.");
+        } catch (Exception e) {
+            // 예외 처리: 이메일 변경에 실패했을 때
+            return ResponseEntity.status(500).body("Failed to update email: " + e.getMessage());
+        }
+    }
+
+    // 비상연락처 등록 또는 변경
+    @PostMapping("/setting/emergencyContact/{memberId}")
+    public ResponseEntity<String> updateEmergencyContact(@PathVariable Long memberId, @RequestBody Map<String, String> request) {
+        String newContact = request.get("newContact");
+
+        mypageService.updateEmergencyContact(memberId, newContact);
+        return ResponseEntity.ok("Emergency contact updated successfully.");
+    }
+
+    // 좋아요 알림 설정 업데이트
+    @PutMapping("/notifications/like/{memberId}")
+    public ResponseEntity<?> updateLikeNotificationSettings(
+            @PathVariable Long memberId,
+            @RequestBody Map<String, Boolean> request) {
+
+        boolean likeNotification = request.get("likeNotification");
+        mypageService.updateLikeNotificationSettings(memberId, likeNotification);
+        return ResponseEntity.ok().body("Like notification settings updated successfully.");
     }
 }

@@ -16,6 +16,7 @@ public interface MypageService {
     Mypage findByNickname(String nickname);
     Mypage findByPoints(int points);
     Mypage findByEmail(String email);
+    Mypage getMypageWithMember(Long memberId);
 
     // 닉네임을 통한 구매내역 조회
 

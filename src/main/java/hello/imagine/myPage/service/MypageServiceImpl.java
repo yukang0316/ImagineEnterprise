@@ -14,6 +14,7 @@ import hello.imagine.myPage.entity.Mypage_Meetinglist;
 import hello.imagine.myPage.repository.MyPageRepository;
 import hello.imagine.myPage.repository.Mypage_CommunitylistRepository;
 import hello.imagine.myPage.repository.Mypage_MeetinglistRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,7 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
+    @Transactional
     public Mypage getMypageByMemberId(Long memberId) {
         Optional<Mypage> mypageOptional = myPageRepository.findByMemberId(memberId);
         if (mypageOptional.isPresent()) {
@@ -169,7 +171,7 @@ public class MypageServiceImpl implements MypageService{
     @Override
     @Transactional
     public Mypage createOrUpdateMypageFromMember(Member member) {
-        MypageId mypageId = new MypageId(member.getMemberId());
+        MypageId mypageId = new MypageId(member.getMemberId()); // id 타입에 맞게 변경
 
         // Mypage 조회 또는 새로 생성
         Mypage mypage = myPageRepository.findById(mypageId).orElse(new Mypage(member));
@@ -180,7 +182,6 @@ public class MypageServiceImpl implements MypageService{
             mypage.setPoints(member.getPoints());
             mypage.setEmail(member.getEmail());
         }
-
         // 엔티티 저장
         return myPageRepository.save(mypage);
     }
@@ -233,13 +234,15 @@ public class MypageServiceImpl implements MypageService{
         List<Post> userPosts = postRepository.findAll(); // 모든 게시글을 조회한 후
 
         for (Post post : userPosts) {
-            // 게시글의 작성자가 Mypage의 member와 같은지 확인합니다.
+            //게시글의 작성자가 Mypage의 member와 같은지 확인합니다.
             if (post.getAuthor().getMemberId().equals(mypage.getMemberId())) {
                 post.setNotificationEnabled(likeNotification); // 좋아요 알림 설정 반영
                 postRepository.save(post);
             }
         }
     }
-
-
+    public Mypage getMypageWithMember(Long memberId) {
+        return myPageRepository.findMypageWithMember(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Mypage not found for memberId: " + memberId));
+    }
 }

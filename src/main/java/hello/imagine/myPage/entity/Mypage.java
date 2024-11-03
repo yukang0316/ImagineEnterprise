@@ -14,8 +14,9 @@ public class Mypage {
     private Long memberId; // 기본 키와 외래 키 둘 다 사용 가능
 
     @MapsId
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "member_id", insertable = false, updatable = false, nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "member_id", insertable = true, updatable = true, nullable = false)
+    //referencedColumnName = "memberId"
     private Member member;
 
     @Column
@@ -67,10 +68,12 @@ public class Mypage {
 
     public void setMember(Member member) {
         this.member = member;
-        this.memberId = member.getMemberId();
-        this.nickname = member.getNickname();
-        this.points = member.getPoints();
-        this.email = member.getEmail();
+        if (member != null) {
+            this.memberId = member.getMemberId();
+            this.nickname = member.getNickname();
+            this.points = member.getPoints();
+            this.email = member.getEmail();
+        }
     }
 
     public String getNickname() {

@@ -6,6 +6,7 @@ import hello.imagine.meeting.model.Meeting;
 import hello.imagine.myPage.entity.Mypage;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,8 +33,8 @@ public class Member {
     @JsonIgnore
     private List<Attendance> attendances;
 
-    @OneToMany(mappedBy = "member")
-    private List<Mypage> mypages;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Mypage> mypages = new ArrayList<>();
 
     @ManyToMany(mappedBy = "member")
     private Set<Meeting> meetings = new HashSet<>();
@@ -127,8 +128,19 @@ public class Member {
         return mypages;
     }
 
-    public void setMypages(List<Mypage> mypages) {
-        this.mypages = mypages;
+    //public void setMypages(List<Mypage> mypages) {
+        //this.mypages = mypages;
+    //}
+
+    public void createMypage() {
+        Mypage mypage = new Mypage(this); // this는 현재 Member 객체를 참조
+        // mypage에 필요한 추가 필드 초기화가 있다면 여기서 설정
+        this.setMypage(mypage); // Member가 Mypage를 참조하도록 설정
+    }
+
+    // Mypage에 대한 setter 메서드 추가
+    public void setMypage(Mypage mypage) {
+        // Mypage와의 관계를 설정
     }
 
     public Set<Meeting> getMeetings() {
