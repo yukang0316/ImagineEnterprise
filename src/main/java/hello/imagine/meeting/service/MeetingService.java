@@ -108,6 +108,7 @@ public class MeetingService {
         Optional<Meeting> meetings = meetingRepository.findById(meetingId);
         return meetings.stream()
                 .map(meeting -> new MeetingDTO (
+                        meeting.getId(),
                         meeting.getTitle(),
                         meeting.getIntroduction(),
                         meeting.getContent(),
@@ -126,6 +127,7 @@ public class MeetingService {
         List<Meeting> meetings = meetingRepository.findByMeetingCategoryId(categoryId);
         return meetings.stream()
                 .map(meeting -> new MeetingDTO(
+                        meeting.getId(),
                         meeting.getTitle(),
                         meeting.getIntroduction(),
                         meeting.getContent(),
@@ -144,6 +146,7 @@ public class MeetingService {
         List<Meeting> meetings = meetingRepository.findBySubcategoryId(subcategoryId);
         return meetings.stream()
                 .map(meeting -> new MeetingDTO(
+                        meeting.getId(),
                         meeting.getTitle(),
                         meeting.getIntroduction(),
                         meeting.getContent(),
@@ -165,6 +168,7 @@ public class MeetingService {
         }
         return meetings.stream()
                 .map(meeting -> new MeetingDTO (
+                        meeting.getId(),
                         meeting.getTitle(),
                         meeting.getIntroduction(),
                         meeting.getContent(),
@@ -177,7 +181,7 @@ public class MeetingService {
     }
 
     // 소모임 입장
-    public void joinMeeting(Long meetingId, Long memberId) {
+    public void joinMeeting(Long meetingId, String memberId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다"));
 
@@ -201,7 +205,7 @@ public class MeetingService {
     }
 
     // 소모임 탈퇴
-    public void leaveMeeting(Long meetingId, Long memberId) {
+    public void leaveMeeting(Long meetingId, String memberId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다"));
         Member member = memberRepository.findById(memberId)

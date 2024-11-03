@@ -74,8 +74,11 @@ public class MeetingController {
 
     // 소모임 입장
     @PostMapping("/{meetingId}/join")
-    public ResponseEntity<String> joinMeeting(@PathVariable Long meetingId, @RequestBody Map<String, Long> request) {
-        Long memberId = request.get("memberId");
+    public ResponseEntity<String> joinMeeting(HttpServletRequest request, @PathVariable Long meetingId) {
+
+        String token = request.getHeader("Authorization").substring(7); // "Bearer " 제거
+        String memberId = jwtUtil.extractUserId(token); // UserId에서 토큰 추출
+
         try {
             meetingService.joinMeeting(meetingId, memberId);
             return ResponseEntity.ok("회원이 성공적으로 가입했습니다.");
@@ -86,8 +89,10 @@ public class MeetingController {
 
     // 소모임 탈퇴
     @DeleteMapping("/{meetingId}/leave")
-    public ResponseEntity<String> leaveMeeting(@PathVariable Long meetingId, @RequestBody Map<String, Long> request) {
-        Long memberId = request.get("memberId");
+    public ResponseEntity<String> leaveMeeting(@PathVariable Long meetingId, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7); // "Bearer " 제거
+        String memberId = jwtUtil.extractUserId(token); // UserId에서 토큰 추출
+
         try {
             meetingService.leaveMeeting(meetingId, memberId);
             return new ResponseEntity<>("회원이 성공적으로 탈퇴했습니다.", HttpStatus.OK);

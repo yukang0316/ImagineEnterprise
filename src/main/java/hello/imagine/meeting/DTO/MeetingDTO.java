@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MeetingDTO {
+    private long id;
     private String title; // 모임 이름
     private String introduction; // 한줄 소개
     private String content; // 본문 내용
@@ -19,7 +20,8 @@ public class MeetingDTO {
     private Long subcategoryId;
 
 
-    public MeetingDTO(String title, String introduction, String content, int memberCount, String address, Long meetingCategoryId, Long subcategoryId) {
+    public MeetingDTO(Long id, String title, String introduction, String content, int memberCount, String address, Long meetingCategoryId, Long subcategoryId) {
+        this.id = id;
         this.title = title;
         this.introduction = introduction;
         this.content = content;
