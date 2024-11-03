@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface Mypage_MeetinglistRepository extends JpaRepository<Mypage_Meetinglist, Long> {
-
     // 특정 회원의 Mypage_Meetinglist 정보를 조회하는 메서드
     List<Mypage_Meetinglist> findAllMeetingsByMember(Member member);
 }

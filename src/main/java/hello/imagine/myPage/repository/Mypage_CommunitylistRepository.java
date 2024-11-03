@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface Mypage_CommunitylistRepository extends JpaRepository<Mypage_Communitylist, Long> {
-
     // 특정 회원의 Mypage_Communitylist 정보를 조회하는 메서드
     Optional<Mypage_Communitylist> findByMember(Member member);
-
 }

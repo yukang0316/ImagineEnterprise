@@ -8,8 +8,6 @@ import hello.imagine.login.repository.MemberRepository;
 import hello.imagine.meeting.model.Meeting;
 import hello.imagine.meeting.repository.MeetingRepository;
 import hello.imagine.myPage.entity.Mypage;
-import hello.imagine.myPage.entity.MypageId;
-import hello.imagine.myPage.entity.Mypage_Communitylist;
 import hello.imagine.myPage.entity.Mypage_Meetinglist;
 import hello.imagine.myPage.repository.MyPageRepository;
 import hello.imagine.myPage.repository.Mypage_CommunitylistRepository;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MypageServiceImpl implements MypageService{
+public class MypageServiceImpl implements MypageService {
     private final MyPageRepository myPageRepository;
     private final MeetingRepository meetingRepository;
     private final PostRepository postRepository;
@@ -31,7 +29,9 @@ public class MypageServiceImpl implements MypageService{
     private final MemberRepository memberRepository;
 
     @Autowired
-    public MypageServiceImpl(MyPageRepository myPageRepository, MeetingRepository meetingRepository, PostRepository postRepository, Mypage_MeetinglistRepository mypage_meetinglistRepository, Mypage_CommunitylistRepository mypage_communitylistRepository, MemberRepository memberRepository) {
+    public MypageServiceImpl(MyPageRepository myPageRepository, MeetingRepository meetingRepository,
+                             PostRepository postRepository, Mypage_MeetinglistRepository mypage_meetinglistRepository,
+                             Mypage_CommunitylistRepository mypage_communitylistRepository, MemberRepository memberRepository) {
         this.myPageRepository = myPageRepository;
         this.meetingRepository = meetingRepository;
         this.postRepository = postRepository;
@@ -41,27 +41,31 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
-    public Mypage getMypageByMemberId(Long memberId) {
-        Optional<Mypage> mypageOptional = myPageRepository.findByMemberId(memberId);
-        if (mypageOptional.isPresent()) {
-            Mypage mypage = mypageOptional.get();
-            Member member = mypage.getMember(); // Mypage에서 Member 객체 가져오기
-            if (member != null) {
-                // Member의 email을 Mypage에 설정
+    @Transactional
+    public Optional<Mypage> getMypageById(String id) {
+        // Member 조회
+        Optional<Member> memberOptional = memberRepository.findById(id);
+
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+
+            // Mypage 조회 (id를 사용하여)
+            Optional<Mypage> mypageOptional = myPageRepository.findById(id);
+            if (mypageOptional.isPresent()) {
+                Mypage mypage = mypageOptional.get();
+                // Member의 값으로 Mypage 필드 업데이트
+                mypage.setMember(member);
                 mypage.setNickname(member.getNickname());
                 mypage.setPoints(member.getPoints());
                 mypage.setEmail(member.getEmail());
+
+                // Mypage 저장 (업데이트 반영)
+                myPageRepository.save(mypage);
+
+                return Optional.of(mypage); // 업데이트된 Mypage 반환
             }
-            return mypage; // nickname, points, email이 포함된 Mypage 반환
-        } else {
-            throw new IllegalArgumentException("Mypage not found for memberId: " + memberId);
         }
-    }
-
-
-    @Override
-    public Mypage findById(MypageId mypageId) {
-        return myPageRepository.findById(mypageId).orElse(null);
+        return Optional.empty(); // Member 또는 Mypage가 존재하지 않음
     }
 
 
@@ -80,41 +84,34 @@ public class MypageServiceImpl implements MypageService{
         return myPageRepository.findByEmail(email).orElse(null);
     }
 
-    // 구매내역 조회
-
-    // 소모임 내역 조회
     @Override
-    public List<Mypage_Meetinglist> getMyMeetings(Long memberId) {
-        Member member = new Member(); // Member 객체를 가져오는 로직 추가 필요
-        member.setMemberId(memberId);
+    public List<Mypage_Meetinglist> getMyMeetings(String id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
         return mypage_meetinglistRepository.findAllMeetingsByMember(member);
     }
 
-    // 소모임 탈퇴
     @Override
-    public void leaveMeeting(Long meetingId, Long memberId) {
+    public void leaveMeeting(Long meetingId, String id) {
         Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다"));
+                .orElseThrow(() -> new RuntimeException("Meeting not found"));
 
-        // 여기서 멤버가 모임에 속해 있는지 확인 후 탈퇴 처리
-        if (meeting.getMembers().stream().noneMatch(m -> m.getId().equals(memberId))) {
-            throw new RuntimeException("회원이 모임에 속해 있지 않습니다");
+        if (meeting.getMembers().stream().noneMatch(m -> m.getId().equals(id))) {
+            throw new RuntimeException("Member not part of the meeting");
         }
 
-        // 멤버를 모임에서 제거하고 현재 인원을 감소시킴
-        meeting.getMembers().removeIf(m -> m.getId().equals(memberId));
-        meeting.setMemberCount(meeting.getMembers().size()); // 업데이트된 멤버 수 설정
-        meetingRepository.save(meeting); // 모임 정보 저장
+        meeting.getMembers().removeIf(m -> m.getId().equals(id));
+        meeting.setMemberCount(meeting.getMembers().size());
+        meetingRepository.save(meeting);
     }
 
-    // 소모임 개설자에 의한 모집 공고 수정
     @Override
-    public Meeting updateMeeting(Long meetingId, Meeting updatedMeeting, Long memberId) {
+    public Meeting updateMeeting(Long meetingId, Meeting updatedMeeting, String id) {
         Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다"));
+                .orElseThrow(() -> new RuntimeException("Meeting not found"));
 
-        if (!meeting.getLeader().getId().equals(memberId)) {
-            throw new RuntimeException("회원이 소모임 개설자가 아닙니다");
+        if (!meeting.getLeader().getId().equals(id)) {
+            throw new RuntimeException("Member is not the leader of the meeting");
         }
 
         meeting.setTitle(updatedMeeting.getTitle());
@@ -124,120 +121,112 @@ public class MypageServiceImpl implements MypageService{
         return meetingRepository.save(meeting);
     }
 
-    // 소모임 개설자에 의한 소모임 삭제
     @Override
-    public void deleteMeeting(Long meetingId, Long memberId) {
+    public void deleteMeeting(Long meetingId, String id) {
         Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new RuntimeException("모임을 찾을 수 없습니다"));
+                .orElseThrow(() -> new RuntimeException("Meeting not found"));
 
-        if (!meeting.getLeader().getId().equals(memberId)) {
-            throw new RuntimeException("회원이 소모임 개설자가 아닙니다");
+        if (!meeting.getLeader().getId().equals(id)) {
+            throw new RuntimeException("Member is not the leader of the meeting");
         }
 
         meetingRepository.delete(meeting);
     }
 
-    // 커뮤니티 내역 조회
     @Override
-    public List<Post> getWrittenPosts(Member member) {
-        return mypage_communitylistRepository.findByMember(member)
-                .map(Mypage_Communitylist::getWrittenPosts)
+    public List<Post> getWrittenPosts(String id) {
+        return memberRepository.findById(id)
+                .map(Member::getWrittenPosts)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
     }
 
     @Override
-    public List<Post> getLikedPosts(Member member) {
-        return mypage_communitylistRepository.findByMember(member)
-                .map(Mypage_Communitylist::getLikedPosts)
+    public List<Post> getLikedPosts(String id) {
+        return memberRepository.findById(id)
+                .map(Member::getLikedPosts)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
     }
 
     @Override
-    public List<ChatRoom> getParticipatingChatRooms(Member member) {
-        return mypage_communitylistRepository.findByMember(member)
-                .map(Mypage_Communitylist::getChatRooms)
+    public List<ChatRoom> getParticipatingChatRooms(String id) {
+        return memberRepository.findById(id)
+                .map(Member::getChatRooms)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
     }
 
-    // 마이페이지 저장 또는 업데이트
     @Override
     public Mypage save(Mypage mypage) {
         return myPageRepository.save(mypage);
     }
 
-    // Member 객체를 통해 마이페이지 생성 또는 업데이트
     @Override
     @Transactional
     public Mypage createOrUpdateMypageFromMember(Member member) {
-        MypageId mypageId = new MypageId(member.getMemberId());
+        Optional<Mypage> mypageOptional = myPageRepository.findById(member.getId());
+        Mypage mypage = mypageOptional.orElse(new Mypage(member));
 
-        // Mypage 조회 또는 새로 생성
-        Mypage mypage = myPageRepository.findById(mypageId).orElse(new Mypage(member));
+        mypage.setNickname(member.getNickname());
+        mypage.setPoints(member.getPoints());
+        mypage.setEmail(member.getEmail());
 
-        // 기존 Mypage 값 업데이트 (닉네임, 포인트, 이메일)
-        if (mypage.getMember() != null) {
-            mypage.setNickname(member.getNickname());
-            mypage.setPoints(member.getPoints());
-            mypage.setEmail(member.getEmail());
-        }
-
-        // 엔티티 저장
         return myPageRepository.save(mypage);
     }
 
-
-    // 계정 설정
     @Override
-    public void updateNickname(Long memberId, String newNickname) {
-        Mypage mypage = getMypageByMemberId(memberId);
-        mypage.updateNickname(newNickname);
-        save(mypage);
+    public void updateNickname(String id, String newNickname) {
+        Mypage mypage = getMypageById(id)
+                .orElseThrow(() -> new RuntimeException("Mypage not found")); // Optional에서 Mypage 가져오기
+        mypage.setNickname(newNickname);
+        myPageRepository.save(mypage); // myPageRepository를 사용하여 Mypage 저장
 
-        // Member 테이블에서 닉네임 업데이트
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
+        // Member 업데이트
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
         member.setNickname(newNickname);
         memberRepository.save(member);
-
     }
 
-    @Override
-    public void updateEmail(Long memberId, String newEmail) {
-        Mypage mypage = getMypageByMemberId(memberId);
-        mypage.updateEmail(newEmail);
-        save(mypage);
 
-        // Member 테이블에서 이메일 업데이트
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
+    @Override
+    public void updateEmail(String id, String newEmail) {
+        Mypage mypage = getMypageById(id)
+                .orElseThrow(() -> new RuntimeException("Mypage not found")); // Optional에서 Mypage 가져오기
+        mypage.setEmail(newEmail);
+        myPageRepository.save(mypage); // myPageRepository를 사용하여 Mypage 저장
+
+        // Member 업데이트
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
         member.setEmail(newEmail);
         memberRepository.save(member);
     }
 
+
     @Override
-    public void updateEmergencyContact(Long memberId, String newContact) {
-        Mypage mypage = getMypageByMemberId(memberId);
-        mypage.updateEmergencyContact(newContact);  // 등록 또는 변경을 처리
-        save(mypage);
+    public void updateEmergencyContact(String id, String newContact) {
+        Mypage mypage = getMypageById(id)
+                .orElseThrow(() -> new RuntimeException("Mypage not found")); // Optional에서 Mypage 가져오기
+        mypage.updateEmergencyContact(newContact); // 긴급 연락처 업데이트
+        myPageRepository.save(mypage); // myPageRepository를 사용하여 Mypage 저장
     }
 
-    // 좋아요 알림 설정
+
     @Override
-    public void updateLikeNotificationSettings(Long memberId, boolean likeNotification) {
-        // Mypage를 memberId로 가져옵니다.
-        Mypage mypage = getMypageByMemberId(memberId);
+    public void updateLikeNotificationSettings(String id, boolean likeNotification) {
+        Mypage mypage = getMypageById(id)
+                .orElseThrow(() -> new RuntimeException("Mypage not found")); // Optional에서 Mypage 가져오기
+        mypage.setLikeNotificationEnabled(likeNotification); // 알림 설정 업데이트
+        myPageRepository.save(mypage); // 변경된 Mypage 저장
 
-        // Mypage의 좋아요 알림 설정을 업데이트합니다.
-        mypage.setLikeNotificationEnabled(likeNotification);
-        myPageRepository.save(mypage);
-
-        // 사용자가 작성한 Post의 알림 설정을 업데이트합니다.
-        List<Post> userPosts = postRepository.findAll(); // 모든 게시글을 조회한 후
-
+        // 사용자의 모든 게시물 가져오기
+        List<Post> userPosts = postRepository.findAll();
         for (Post post : userPosts) {
-            // 게시글의 작성자가 Mypage의 member와 같은지 확인합니다.
-            if (post.getAuthor().getMemberId().equals(mypage.getMemberId())) {
-                post.setNotificationEnabled(likeNotification); // 좋아요 알림 설정 반영
-                postRepository.save(post);
+            // 게시물의 작성자가 현재 사용자인 경우
+            if (post.getAuthor().getId().equals(mypage.getId())) {
+                post.setNotificationEnabled(likeNotification); // 알림 설정 적용
+                postRepository.save(post); // 변경된 게시물 저장
             }
         }
     }
+
 }

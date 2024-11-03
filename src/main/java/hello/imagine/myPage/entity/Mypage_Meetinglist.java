@@ -9,11 +9,12 @@ import jakarta.persistence.*;
 @Entity
 public class Mypage_Meetinglist {
     @Id
+    @Column(name = "id", insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "id")
     private Member member; // 회원 참조
 
     // 소속된 소모임 목록
@@ -21,11 +22,11 @@ public class Mypage_Meetinglist {
     @JoinColumn(name = "meeting_list_id") // Join column을 통해 Mypage_Meetinglist를 참조
     private Mypage_Meetinglist mypageMeetingList;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -45,3 +46,5 @@ public class Mypage_Meetinglist {
         this.mypageMeetingList = mypageMeetingList;
     }
 }
+
+
