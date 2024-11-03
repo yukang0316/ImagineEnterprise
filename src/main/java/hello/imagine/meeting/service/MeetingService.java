@@ -3,6 +3,7 @@ package hello.imagine.meeting.service;
 import hello.imagine.login.model.Member;
 import hello.imagine.login.repository.MemberRepository;
 import hello.imagine.meeting.DTO.LocationDTO;
+import hello.imagine.meeting.DTO.MapDTO;
 import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.model.Meeting;
 
@@ -254,6 +255,21 @@ public class MeetingService {
         meeting.setContent(updatedMeeting.getContent());
         meeting.setMaxMembers(updatedMeeting.getMaxMembers());
         meetingRepository.save(meeting);
+    }
+
+    // 모든 소모임 지도상에 위치 전하기 서비스
+    public List<MapDTO> getAllMeetingsLocation() {
+        List<Meeting> meetings = meetingRepository.findAll();
+
+        return meetings.stream()
+                .map(meeting -> new MapDTO(
+                        meeting.getId(),
+                        meeting.getTitle(),
+                        meeting.getLatitude(),
+                        meeting.getLongitude(),
+                        meeting.getMeetingCategory().getId()
+                ))
+                .collect(Collectors.toList());
     }
 
 

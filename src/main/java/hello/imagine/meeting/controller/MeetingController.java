@@ -1,6 +1,7 @@
 package hello.imagine.meeting.controller;
 
 import hello.imagine.meeting.DTO.JoinRequest;
+import hello.imagine.meeting.DTO.MapDTO;
 import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.model.Meeting;
 import hello.imagine.meeting.service.GeocodingService;
@@ -122,6 +123,10 @@ public class MeetingController {
         return ResponseEntity.ok("Meeting updated successfully!");
     }
 
-    // 소모임 게시글
+    @GetMapping("/locations")
+    public ResponseEntity<List<MapDTO>> getAllMeetingsLocation() {
+        List<MapDTO> locations = meetingService.getAllMeetingsLocation();
+        return ResponseEntity.ok(locations);
+    }
 
 }
