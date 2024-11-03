@@ -1,5 +1,6 @@
 package hello.imagine.meeting.controller;
 
+import hello.imagine.meeting.DTO.LocationDTO;
 import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.service.MeetingCategoryService;
 import hello.imagine.meeting.model.MeetingCategory;
@@ -37,8 +38,8 @@ public class MeetingCategoryController {
 
     // 카테고리로 소모임 불러오기
     @GetMapping("/meetings/category/{categoryId}")
-    public ResponseEntity<List<MeetingDTO>> getMeetingsByCategory(@PathVariable Long categoryId) {
-        List<MeetingDTO> meetings = meetingService.getMeetingsByCategoryId(categoryId);
+    public ResponseEntity<List<LocationDTO>> getMeetingsByCategory(@PathVariable Long categoryId) {
+        List<LocationDTO> meetings = meetingService.getMeetingsByCategoryId(categoryId);
         if (meetings.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

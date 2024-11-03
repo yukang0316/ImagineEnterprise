@@ -1,5 +1,6 @@
 package hello.imagine.meeting.controller;
 
+import hello.imagine.meeting.DTO.JoinRequest;
 import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.model.Meeting;
 import hello.imagine.meeting.service.GeocodingService;
@@ -73,14 +74,14 @@ public class MeetingController {
 
 
     // 소모임 입장
-    @PostMapping("/{meetingId}/join")
-    public ResponseEntity<String> joinMeeting(HttpServletRequest request, @PathVariable Long meetingId) {
+    @PostMapping("/join")
+    public ResponseEntity<String> joinMeeting(HttpServletRequest request, @RequestBody JoinRequest joinRequest) {
 
         String token = request.getHeader("Authorization").substring(7); // "Bearer " 제거
         String memberId = jwtUtil.extractUserId(token); // UserId에서 토큰 추출
 
         try {
-            meetingService.joinMeeting(meetingId, memberId);
+            meetingService.joinMeeting(memberId, joinRequest.getId(), joinRequest.getMeetingCategoryId(), joinRequest.getSubcategoryId()) ;
             return ResponseEntity.ok("회원이 성공적으로 가입했습니다.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
