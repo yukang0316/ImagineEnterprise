@@ -21,7 +21,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private MemberRepository memberRepository;
 
     @Override
-    public void checkAttendance(Long memberId, LocalDate date) throws Exception {
+    public void checkAttendance(String memberId, LocalDate date) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("멤버를 찾을 수 없습니다."));
         if (attendanceRepository.existsByMemberAndDate(member, date)) {
             throw new Exception("오늘 출석이 이미 확인되었습니다.");
@@ -41,7 +41,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public List<Attendance> getMonthlyAttendance(Long memberId, int year, int month) throws Exception {
+    public List<Attendance> getMonthlyAttendance(String memberId, int year, int month) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("멤버를 찾을 수 없습니다."));
         return attendanceRepository.findByMemberAndDateBetween(
                 member,
@@ -51,7 +51,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public int getPoints(Long memberId) throws Exception {
+    public int getPoints(String memberId) throws Exception {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new Exception("멤버를 찾을 수 없습니다."));
 
