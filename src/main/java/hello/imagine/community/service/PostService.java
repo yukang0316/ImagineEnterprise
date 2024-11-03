@@ -68,7 +68,7 @@ public class PostService {
     }
 
     public List<Post> searchPosts(String query) {
-        return postRepository.findByTitleContainingOrContentContaining(query, query);
+        return postRepository.findByTitleContainingOrContentContainingOrderByCreatedAtDesc(query, query);
     }
 
     // 좋아요를 추가하거나 취소하는 메서드
@@ -108,7 +108,7 @@ public class PostService {
 
     // 좋아요가 5개 이상인 인기 게시글을 가져오는 메서드
     public List<Post> getPopularPosts() {
-        return postRepository.findByLikeCountGreaterThanEqual(5);
+        return postRepository.findByLikeCountGreaterThanEqualOrderByCreatedAtDesc(1);
     }
 
 }

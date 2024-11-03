@@ -82,10 +82,10 @@ public class PostController {
     }
 
     // 게시글 검색
-    @GetMapping("/search")
-    public ResponseEntity<List<Post>> searchPosts(@RequestParam String query) {
-        return ResponseEntity.ok(postService.searchPosts(query));
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity<List<Post>> searchPosts(@RequestParam String query) {
+//        return ResponseEntity.ok(postService.searchPosts(query));
+//    }
 
     // 좋아요 기능: 추가 또는 취소
     @PostMapping("/{id}/like")

@@ -1,6 +1,7 @@
 package hello.imagine.community.service;
 
 import hello.imagine.community.dto.ChatMessageDTO;
+import hello.imagine.community.dto.ChatMessageResponseDTO;
 import hello.imagine.community.dto.ChatRoomDTO;
 import hello.imagine.community.model.Category;
 import hello.imagine.community.model.ChatMessage;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
@@ -96,6 +98,35 @@ public class ChatService {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
         return member.getMemberId();
+    }
+
+    //메시지 목록 가져오기
+    public ChatMessageResponseDTO getMessageList(Long roomId) {
+        // roomId에 해당하는 ChatRoom 조회
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Chat room not found"));
+
+        // chatRoom에서 categoryId를 가져옴
+        Long categoryId = chatRoom.getCategory().getId();
+
+        // roomId에 해당하는 모든 메시지 조회
+        List<ChatMessage> messages = chatMessageRepository.findByChatRoom(chatRoom);
+
+        // 메시지 정보를 ChatMessageResponseDTO로 매핑하여 반환
+        List<ChatMessageDTO> messageDTOs = messages.stream()
+                .map(message -> new ChatMessageDTO(
+                        message.getId(),
+                        message.getSender().getId(),
+                        message.getContent(),
+                        message.getTimestamp()))
+                .collect(Collectors.toList());
+
+        // ChatMessageResponseDTO에 데이터 설정
+        return new ChatMessageResponseDTO(
+                chatRoom.getId(),
+                categoryId,
+                messageDTOs
+        );
     }
 
     // 참여자가 5명 이상인 채팅방을 가져오는 메서드
