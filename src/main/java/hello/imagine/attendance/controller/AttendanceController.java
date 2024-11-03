@@ -31,18 +31,21 @@ public class AttendanceController {
     // 출석 체크
     @PostMapping("/check")
     public ResponseEntity<String> checkAttendance(HttpServletRequest request) {
-
         String token = request.getHeader("Authorization").substring(7); // "Bearer " 제거
         String memberId = jwtUtil.extractUserId(token); // user_id를 반환
 
         try {
             LocalDate today = LocalDate.now();
             attendanceServiceImpl.checkAttendance(memberId, today);
+
+            // 출석 체크가 성공적으로 완료된 경우
             return ResponseEntity.ok("출석이 확인되었습니다.");
+
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body("확인되지 않은 memberId 입니다");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            // 이미 출석 체크가 완료된 경우, 200 OK와 함께 메시지를 반환
+            return ResponseEntity.ok(e.getMessage()); // "출석 체크가 이미 확인되었습니다."
         }
     }
 
