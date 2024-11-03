@@ -3,6 +3,7 @@ package hello.imagine.community.model;
 import hello.imagine.login.model.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -27,4 +28,6 @@ public class ChatMessage {
     private Member sender;
 
     private LocalDateTime timestamp;
+
+
 }
