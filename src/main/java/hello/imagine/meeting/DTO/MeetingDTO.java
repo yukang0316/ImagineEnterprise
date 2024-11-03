@@ -14,15 +14,17 @@ public class MeetingDTO {
     private String introduction; // 한줄 소개
     private String content; // 본문 내용
     private int memberCount; // 현재 인원
+    private String address;
     private Long meetingCategoryId;
     private Long subcategoryId;
 
 
-    public MeetingDTO(String title, String introduction, String content, int memberCount, Long meetingCategoryId, Long subcategoryId) {
+    public MeetingDTO(String title, String introduction, String content, int memberCount, String address, Long meetingCategoryId, Long subcategoryId) {
         this.title = title;
         this.introduction = introduction;
         this.content = content;
         this.memberCount = memberCount;
+        this.address = address;
         this.meetingCategoryId = meetingCategoryId;
         this.subcategoryId = subcategoryId;
     }

@@ -35,6 +35,16 @@ public class MeetingService {
     @Autowired
     private SubcategoryRepository subcategoryRepository;
 
+    @Autowired
+    private GeocodingService geocodingService;
+
+
+    public MeetingService(MeetingRepository meetingRepository, MemberRepository memberRepository, GeocodingService geocodingService) {
+        this.meetingRepository = meetingRepository;
+        this.memberRepository = memberRepository;
+        this.geocodingService = geocodingService;
+    }
+
     // 모든 모임 조회
     public List<Meeting> findAllMeetings() {
         return meetingRepository.findAll();
@@ -43,7 +53,19 @@ public class MeetingService {
 
 
     // 모임 생성
-    public Meeting createMeeting(Meeting meeting, Long memberId) {
+    public Meeting createMeeting (String memberId, Meeting meeting) throws Exception {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("멤버를 찾을 수 없습니다."));
+
+        // 주소를 위도와 경도로 변환
+        double[] coordinates = geocodingService.getCoordinates(meeting.getAddress());
+        if (coordinates != null) {
+            meeting.setLatitude(coordinates[0]);
+            meeting.setLongitude(coordinates[1]);
+        } else {
+            throw new RuntimeException("주소를 찾을 수 없습니다.");
+        }
+
 
         // 상위 카테고리 존재 확인
         MeetingCategory meetingCategory = meetingCategoryRepository.findById(meeting.getMeetingCategory().getId())
@@ -76,6 +98,7 @@ public class MeetingService {
         meeting.getMembers().add(leader);
         meeting.setMemberCount(1);
         return meetingRepository.save(meeting);
+
     }
 
 
@@ -89,6 +112,7 @@ public class MeetingService {
                         meeting.getIntroduction(),
                         meeting.getContent(),
                         meeting.getMemberCount(),
+                        meeting.getAddress(),
                         meeting.getMeetingCategory().getId(),
                         meeting.getSubcategory().getId()
                 ))
@@ -106,6 +130,7 @@ public class MeetingService {
                         meeting.getIntroduction(),
                         meeting.getContent(),
                         meeting.getMemberCount(),
+                        meeting.getAddress(),
                         meeting.getMeetingCategory().getId(),
                         meeting.getSubcategory().getId()
                 ))
@@ -123,6 +148,7 @@ public class MeetingService {
                         meeting.getIntroduction(),
                         meeting.getContent(),
                         meeting.getMemberCount(),
+                        meeting.getAddress(),
                         meeting.getSubcategory().getId(),
                         meeting.getSubcategory().getId()// 하위 카테고리 ID
                 ))
@@ -143,6 +169,7 @@ public class MeetingService {
                         meeting.getIntroduction(),
                         meeting.getContent(),
                         meeting.getMemberCount(),
+                        meeting.getAddress(),
                         meeting.getMeetingCategory().getId(),
                         meeting.getSubcategory().getId()
                 ))
