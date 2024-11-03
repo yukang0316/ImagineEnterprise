@@ -39,7 +39,6 @@ public class MeetingCategoryService {
     }
 
 
-
     // 모든 카테고리 조회
     public List<MeetingCategory> getAllCategories() {
         return meetingCategoryRepository.findAll();

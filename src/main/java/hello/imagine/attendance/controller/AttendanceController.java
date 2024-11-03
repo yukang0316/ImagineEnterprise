@@ -31,10 +31,11 @@ public class AttendanceController {
     // 출석 체크
     @PostMapping("/check")
     public ResponseEntity<String> checkAttendance(HttpServletRequest request) {
+
         String token = request.getHeader("Authorization").substring(7); // "Bearer " 제거
         String memberId = jwtUtil.extractUserId(token); // user_id를 반환
 
-        try {//
+        try {
             LocalDate today = LocalDate.now();
             attendanceServiceImpl.checkAttendance(memberId, today);
             return ResponseEntity.ok("출석이 확인되었습니다.");

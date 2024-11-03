@@ -2,7 +2,10 @@ package hello.imagine.meeting.controller;
 
 import hello.imagine.meeting.DTO.MeetingDTO;
 import hello.imagine.meeting.model.Meeting;
+import hello.imagine.meeting.service.GeocodingService;
 import hello.imagine.meeting.service.MeetingService;
+import hello.imagine.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +21,38 @@ public class MeetingController {
     @Autowired
     private MeetingService meetingService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private GeocodingService geocodingService;
+
+    public MeetingController(MeetingService meetingService, JwtUtil jwtUtil) {
+        this.meetingService = meetingService;
+        this.jwtUtil = jwtUtil;
+    }
+
     // 모든 소모임 조회
     @GetMapping
     public ResponseEntity<List<Meeting>> getAllMeetings() {
         return ResponseEntity.ok(meetingService.findAllMeetings());
     }
 
-    // 소모임 생성
+    // 소모임 생성 // 토큰으로 생성
     @PostMapping("/create")
-    public ResponseEntity<String> createMeeting(@RequestBody Meeting meeting, @RequestParam Long memberId) {
+    public ResponseEntity<String> createMeeting(HttpServletRequest request, @RequestBody Meeting meeting) {
+
+        String token = request.getHeader("Authorization").substring(7); // "Bearer " 제거
+        String memberId = jwtUtil.extractUserId(token); // UserId에서 토큰 추출
+
         try {
-            meetingService.createMeeting(meeting, memberId);
+            meetingService.createMeeting(memberId, meeting);
             return ResponseEntity.ok("모임이 성공적으로 생성되었습니다.");
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

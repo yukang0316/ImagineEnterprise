@@ -34,6 +34,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.jsoup:jsoup:1.15.3'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.json:json:20210307'
+
 
 }
 
