@@ -10,8 +10,17 @@ import java.time.LocalDateTime;
 
 public class ChatMessageDTO {
 
+    private Long id;
     private String content;
     private String senderId;
     private LocalDateTime timestamp;
 
+    public ChatMessageDTO(Long id, String senderId, String content, LocalDateTime timestamp) {
+        this.id = id;
+        this.senderId = senderId;
+        this.content = content;
+        this.timestamp = timestamp;
+    }
+
 }
+

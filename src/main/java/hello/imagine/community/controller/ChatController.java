@@ -1,6 +1,7 @@
 package hello.imagine.community.controller;
 
 import hello.imagine.community.dto.ChatMessageDTO;
+import hello.imagine.community.dto.ChatMessageResponseDTO;
 import hello.imagine.community.dto.ChatRoomDTO;
 import hello.imagine.community.model.ChatMessage;
 import hello.imagine.community.model.ChatRoom;
@@ -61,6 +62,23 @@ public class ChatController {
     @GetMapping("/popular-rooms")
     public ResponseEntity<List<ChatRoom>> getPopularChatRooms() {
         return ResponseEntity.ok(chatService.getPopularChatRooms());
+    }
+
+    //채팅 메시지 리스트 반환
+    @GetMapping("/room/{roomId}/message-list")
+    public ResponseEntity<ChatMessageResponseDTO> getMessageList(
+            @PathVariable Long roomId,
+            @RequestHeader("Authorization") String token) {
+
+        String userId = jwtUtil.extractUserId(token.substring(7));
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        // roomId에 해당하는 메시지 리스트를 조회
+        ChatMessageResponseDTO responseDTO = chatService.getMessageList(roomId);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 }

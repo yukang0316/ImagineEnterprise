@@ -10,8 +10,9 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 카테고리 ID로 게시글 조회
     List<Post> findByCategoryId(Long categoryId);
-    List<Post> findByTitleContainingOrContentContaining(String title, String content);
+    // 제목이나 내용을 포함하는 게시글을 최신순으로 조회
+    List<Post> findByTitleContainingOrContentContainingOrderByCreatedAtDesc(String title, String content);
     List<Post> findTop10ByOrderByCreatedAtDesc();
-    // 좋아요가 5개 이상인 게시글을 찾는 메서드
-    List<Post> findByLikeCountGreaterThanEqual(int likeCount);
+    // 좋아요가 특정 개수 이상인 게시글을 최신순으로 조회
+    List<Post> findByLikeCountGreaterThanEqualOrderByCreatedAtDesc(int likeCount);
 }
