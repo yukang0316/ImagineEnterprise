@@ -8,10 +8,12 @@ import hello.imagine.community.model.ChatRoom;
 import hello.imagine.community.service.ChatService;
 import hello.imagine.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/chat")
@@ -24,18 +26,25 @@ public class ChatController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/room")
-    public ResponseEntity<ChatRoom> createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<ChatRoomDTO> createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO, @RequestHeader("Authorization") String token) {
         String userId = jwtUtil.extractUserId(token.substring(7));  // "Bearer " 제거 후, extractUserId 사용
         if (userId == null) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(chatService.createChatRoom(chatRoomDTO, userId));
+
+        ChatRoom chatRoom = chatService.createChatRoom(chatRoomDTO, userId);
+        ChatRoomDTO responseDTO = new ChatRoomDTO(chatRoom);  // ChatRoom -> ChatRoomDTO 변환
+        return ResponseEntity.ok(responseDTO);
     }
 
     //실시간 채팅방 눌렀을때 리스트 반환
     @GetMapping("/rooms")
-    public ResponseEntity<List<ChatRoom>> getChatRoomsByCategory(@RequestParam Long categoryId) {
-        return ResponseEntity.ok(chatService.getChatRoomsByCategory(categoryId));
+    public ResponseEntity<List<ChatRoomDTO>> getChatRoomsByCategory(@RequestParam Long categoryId) {
+        List<ChatRoom> chatRooms = chatService.getChatRoomsByCategory(categoryId);
+        List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream()
+                .map(ChatRoomDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(chatRoomDTOs);
     }
 
     @PostMapping("/room/{roomId}/join")
